@@ -1,0 +1,28 @@
+<aura:component controller="DataDwellUserLicenseCheck" implements="clients:availableForMailAppAppPage,clients:hasItemContext,flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName" access="global" >
+    
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="client" type="String" default="Salesforce" />
+    <aura:attribute name="sObjectName" type="String" />
+    <aura:attribute name="nullComponent" type="Boolean" default="false" />
+	<aura:attribute name="componentDisplayMode" type="String" default="Auto Select" access="global" />
+	<aura:attribute name="displayPanel" type="Boolean" default="true" access="global" />
+	<aura:attribute name="pageSize" type="Integer" default="10" access="global" />
+    
+    <!-- Email Pane Attributes -->
+    <aura:attribute name="people" type="Object" />
+    <aura:attribute name="source" type="Object" />
+    <aura:attribute name="peopleInitial" type="Object" />
+    <aura:attribute name="sourceInitial" type="Object" />
+    <aura:handler name="change" value="{!v.people}" action="{!c.updatePeople}"/>
+    <!-- /Email Pane Attributes -->
+    
+    <aura:handler name="init" action="{!c.init}" value="{!this}" />
+    
+    <aura:if isTrue="{!v.nullComponent}">
+        <div class="slds-panel"><p class="slds-p-around_medium">Data Dwell License Loader<br/>Use visibility filter to hide this for users without Data Dwell license.</p></div>
+        <aura:set attribute="else">
+			<div aura:id="content"></div>
+        </aura:set>
+    </aura:if>
+    
+</aura:component>

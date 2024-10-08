@@ -1,0 +1,42 @@
+<template>
+    <c-performance-dashboard-row
+        key={id}
+        row-name={tierName}
+        monthly-target={monthlyTarget}
+        closed-last-week={closedLastWeek}
+        closed-this-week={closedThisWeek}
+        closed-this-month={closedThisMonth}
+        expected-this-month={expectedThisMonth}
+        predicted-total-this-month={predictedTotalThisMonth}
+        expected-total-next-month={expectedTotalNextMonth}
+        total-leads={totalLeads}
+        total-opps={totalOpps}
+        arrange-viewings={arrangeViewings}
+        completed-viewings={completedViewings}
+        deals={deals}
+        expandable={multipleMembers}
+        expanded={expanded}
+        onexpand={expandGroup}
+    ></c-performance-dashboard-row>
+
+    <template if:true={multipleMembers} for:each={members} for:item="member">
+        <c-performance-dashboard-row
+            key={member.name}
+            row-name={member.name}
+            monthly-target={member.monthlyTarget}
+            closed-last-week={member.closedLastWeek}
+            closed-this-week={member.closedThisWeek}
+            closed-this-month={member.closedThisMonth}
+            expected-this-month={member.expectedThisMonth}
+            predicted-total-this-month={member.predictedTotalThisMonth}
+            expected-total-next-month={member.expectedTotalNextMonth}
+            total-leads={member.totalLeads}
+            total-opps={member.totalOpps}
+            arrange-viewings={member.arrangeViewings}
+            completed-viewings={member.completedViewings}
+            deals={member.deals}
+            data-visible={expanded}
+            title={member.title}
+        ></c-performance-dashboard-row>
+    </template>
+</template>

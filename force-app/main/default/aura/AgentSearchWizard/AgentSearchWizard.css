@@ -1,0 +1,61 @@
+.THIS .enhanced {
+    background-color: #f0f367;
+}
+.THIS .enhancedFee {
+    background-color: #a2b5ff;
+}
+.THIS .keyprovider {
+    background-color: #d77237;
+}
+
+.THIS .otherenhanced {
+    background-color: #f9facb;
+}
+.THIS .normal {
+    background-color: white;
+}
+.THIS .introduced {
+    background-color: #d3f9d6;
+}
+.THIS .fromIntro {
+    background-color: #ec9191;
+}
+.THIS .subscribed {
+    background-color: #e1e3eb;
+}
+.THIS .subscribedDisabled {
+    background-color: #e1e3eb;
+    pointer-events: none; 
+}
+
+.THIS .slds-modal__container .slds-modal__close {
+    display: none !important;
+}
+
+.THIS .popoverClass {
+    position: absolute;
+    left: 2%;
+    top: 17%;
+    z-index: 99;
+}
+
+.THIS .bcMapContainer {
+    position: relative;
+}
+
+.THIS .greyOut{    
+    pointer-events: none; 
+    background: #CCC; 
+    color: #333; 
+    border: 1px solid #666 ;
+ }
+
+.THIS .text-button > button {
+    cursor: default;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #080707;
+}

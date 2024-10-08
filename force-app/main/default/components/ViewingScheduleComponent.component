@@ -1,0 +1,171 @@
+<apex:component controller="EmailController" access="global">
+  <apex:attribute name="VSId" type="Id" assignTo="{!viewingScheduleId}" description="Id of Viewing Schedule" />
+  <apex:outputText value="{!ViewingSchedule.Email_comments__c}" />
+  <br/>
+  <br/>
+  <apex:outputLink target="_blank" style="color:#89bb1d" value="{!ViewingSchedule.GoogleMapUrl__c}">View Route</apex:outputLink>
+  <br/>
+  <br/>
+  <apex:repeat var="v" value="{!ViewingWrappers}">
+
+
+    <table border="0" cellpadding="0" cellspacing="0" class="full-width" style="width: 600px;" width="600">
+      <tr>
+        <td>
+
+
+          <table border="0" cellpadding="0" cellspacing="0" class="full-width" style="width: 600px;" width="600">
+            <tr>
+              <td>
+
+                <table align="left" border="0" cellpadding="0" cellspacing="0" class="full-width" style="width: 400px;" width="400">
+                  <tr>
+                    <td bgcolor="#b2bbc4" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:16px;line-height:1.3;padding: 10px">
+                      Viewing {!v.sortOrder}
+                    </td>
+                    <td bgcolor="#b2bbc4" width="60%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:16px;line-height:1.3;padding: 10px">
+                      &nbsp;
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#eaecef" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Time of Viewing
+                    </td>
+                    <td bgcolor="#eaecef" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      <apex:outputText value="{0,date,HH:mm a}">
+                        <apex:param value="{!v.viewingDateTime}" />
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#dee2e6" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Centre Name
+                    </td>
+                    <td bgcolor="#dee2e6" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      {!v.businessCentreName}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#eaecef" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Provider
+                    </td>
+                    <td bgcolor="#eaecef" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      {!v.businessCentreParentName}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#dee2e6" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Centre Manager
+                    </td>
+                    <td bgcolor="#dee2e6" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      <apex:outputPanel rendered="{!ISBLANK(v.secondaryContact)}">
+                        {!v.centreManager}
+                      </apex:outputPanel>
+                      <apex:outputPanel rendered="{!NOT ISBLANK(v.secondaryContact)}">
+                        {!v.secondaryContactName}
+                      </apex:outputPanel> 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#eaecef" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Telephone
+                    </td>
+                    <td bgcolor="#eaecef" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      <apex:outputPanel rendered="{!ISBLANK(v.secondaryContact)}">
+                        {!v.businessCentreCentreManagerPhone}
+                      </apex:outputPanel>
+                      <apex:outputPanel rendered="{!NOT ISBLANK(v.secondaryContact)}">
+                        {!v.secondaryContactPhone}
+                      </apex:outputPanel>
+                    </td>
+
+                  </tr>
+                  <tr>
+                    <td bgcolor="#dee2e6" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Centre Manager Email
+                    </td>
+                    <td bgcolor="#dee2e6" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      <apex:outputPanel rendered="{!ISBLANK(v.secondaryContact)}">
+                        {!v.businessCentreCentreManagerEmail}
+
+                      </apex:outputPanel>
+                      <apex:outputPanel rendered="{!NOT ISBLANK(v.secondaryContact)}">
+
+                        {!v.secondaryContactEmail}
+
+                      </apex:outputPanel>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#eaecef" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Address
+                    </td>
+                    <td bgcolor="#eaecef" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      {!v.businessCentreBillingStreet}, {!v.businessCentreBillingCity}, {!v.businessCentreBillingCountry}, {!v.businessCentreBillingPostalCode}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#dee2e6" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Location
+                    </td>
+                    <td bgcolor="#dee2e6" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      <apex:outputLink style="color:#89bb1d" value="{!IF(BEGINS(LOWER(v.businessCentreFlexiWebsiteLink),'http'), v.businessCentreFlexiWebsiteLink, 'http://'+v.businessCentreFlexiWebsiteLink)}">View Property</apex:outputLink>&nbsp;|&nbsp;
+                      <apex:outputLink style="color:#89bb1d" value="https://google.com/maps/?q={!v.businessCentreBillingStreet} {!v.businessCentreBillingCity} {!v.businessCentreBillingCountry} {!v.businessCentreBillingPostalCode}">View Map</apex:outputLink>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#eaecef" width="40%" style="font-weight:bold;font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      Additional Notes
+                    </td>
+                    <td bgcolor="#eaecef" width="60%" style="font-family: Arial, sans-serif;font-size:14px;line-height:1.3;padding: 10px">
+                      {!v.additionalNotes}
+                    </td>
+                  </tr>
+                </table>
+
+                <!--[if gte mso 9]></td><td valign="top"><![endif]-->
+
+
+                <table align="right" border="0" cellpadding="0" cellspacing="0" class="full-width bg-change" style="width: 180px;" width="180">
+                  <tr>
+                    <td align="center">
+                      <img alt="Primary Image" src="{!v.businessCentrePrimaryImage}" width="180" style="width:180px; padding:0 0 10px;"
+                        class="third-width" />
+
+                      <img alt="Secondary Image" src="{!v.businessCentreSecondaryImage}" width="180" style="width:180px; padding:0 0 10px;"
+                        class="third-width" />
+
+                      <img alt="Tertiary Image" src="{!v.businessCentreTertiaryImage}" width="180" style="width:180px" class="third-width"
+                      />
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
+
+
+
+    <table border="0" cellpadding="0" cellspacing="0" class="full-width" style="width: 600px;" width="600">
+      <tr>
+        <td align="center" style="padding:15px 20px">
+          <table cellspacing="0" cellpadding="0" border="0" width="100%" style="width: 100% !important;">
+            <tr>
+              <td align="left" valign="top" width="600px" height="1" style="background-color: #89bb1d; border-collapse:collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-line-height-rule: exactly; line-height: 1px;">
+                <!--[if gte mso 15]>&nbsp;<![endif]-->
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+
+  </apex:repeat>
+</apex:component>

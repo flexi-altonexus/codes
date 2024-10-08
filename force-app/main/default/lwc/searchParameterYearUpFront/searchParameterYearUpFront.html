@@ -1,0 +1,11 @@
+<template>
+    <!-- sldsValidatorIgnoreNextLine -->
+    <lightning-quick-action-panel header="Add 12 month">
+        This process will add 12 months up front. Do you want to proceed?
+
+        <div slot="footer">
+          <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+          <lightning-button variant="brand" label="Proceed" onclick={handleCreation} class="slds-var-m-left_x-small"></lightning-button>
+        </div>
+      </lightning-quick-action-panel>
+</template>

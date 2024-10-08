@@ -1,0 +1,14 @@
+<apex:component access="global" controller="EmailServerMessageController">
+    <apex:attribute name="introRefId" type="Id" assignTo="{!introId}" description="Introduction Id"/>
+    <messaging:htmlEmailBody >
+    <html>
+    <body>
+    <apex:outputText value="{!strBody}" escape="false"/>
+    </body>
+    </html>
+    </messaging:htmlEmailBody>
+    <messaging:attachment renderAs="text/xml" filename="{!strFileName}">
+    <apex:outputText value="{!strXMLAttachment}" escape="false"/>   
+    </messaging:attachment>
+   <!--  <messaging:attachment renderAs="text/xml" fileName="test.xml">{!strXMLAttachment}</messaging:attachment> -->
+</apex:component>

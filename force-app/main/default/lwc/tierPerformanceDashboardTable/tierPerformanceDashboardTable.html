@@ -1,0 +1,42 @@
+<template>
+    <div class="slds-scrollable" style="max-width: 100%; max-height: 85%">
+        <div class="table slds-table">
+            <div class="table-header-row">
+                <template for:each={headers} for:item="header">
+                    <div
+                        key={header}
+                        class="table-header-cell slds-text-align_center"
+                    >
+                        <lightning-formatted-text
+                            value={header}
+                        ></lightning-formatted-text>
+                    </div>
+                </template>
+            </div>
+
+            <template for:each={visibleTiers} for:item="tier">
+                <c-performance-dashboard-row
+                    key={tier.name}
+                    row-name={tier.name}
+                    monthly-target={tier.performance.monthlyTarget}
+                    closed-last-week={tier.performance.closedLastWeek}
+                    closed-this-week={tier.performance.closedThisWeek}
+                    closed-this-month={tier.performance.closedThisMonth}
+                    expected-this-month={tier.performance.expectedThisMonth}
+                    predicted-total-this-month={tier.performance.predictedTotalThisMonth}
+                    expected-total-next-month={tier.performance.expectedTotalNextMonth}
+                    total-leads={tier.performance.totalLeads}
+                    total-opps={tier.performance.totalOpps}
+                    arrange-viewings={tier.performance.arrangeViewings}
+                    completed-viewings={tier.performance.completedViewings}
+                    deals={tier.performance.deals}
+                    data-visible
+                    data-is-total-row={tier.isTotalRow}
+                    title={tier.name}
+                    sub-total-opps={subTotalTotalOpps}
+                    sub-total-leads={subTotalTotalLeads}
+                ></c-performance-dashboard-row>
+            </template>
+        </div>
+    </div>
+</template>

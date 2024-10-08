@@ -1,0 +1,333 @@
+<apex:page controller="IntroductionPageController" applyHtmlTag="false" cache="false" contentType="text/html" showHeader="false" sidebar="false" standardStylesheets="false" applyBodyTag="false">
+	<html>
+        <head>
+            <meta property="og:image" content="{!introduction.BusinessCenterPhotoPrimary}" />
+    		<c:IntroductionPageStyle />
+        </head>
+        <body>
+            <div id="bcp" data-action="{!'/apex/IntroductionPageAction?id=' + introduction.Id}" data-transport="{!introduction.BusinessCenterTransportJSON}">
+                <div class="container">
+                    <div class="left_column">
+                        <div class="left_column_top">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGUAAAAwCAIAAACHXSPcAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDcuMS1jMDAwIDc5LmVkYTJiM2ZhYywgMjAyMS8xMS8xNy0xNzoyMzoxOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIzLjEgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjM1RERDRkQ4RDhBMTFFQ0ExNTBBQkU0MkU4NkI5REMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjM1RERDRkU4RDhBMTFFQ0ExNTBBQkU0MkU4NkI5REMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyMzVERENGQjhEOEExMUVDQTE1MEFCRTQyRTg2QjlEQyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyMzVERENGQzhEOEExMUVDQTE1MEFCRTQyRTg2QjlEQyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PoEXez8AAA7GSURBVHja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" />
+                            <div class="business_center">
+                                <div class="title">{!introduction.BusinessCenterName}</div>
+                                <div class="subtitle">{!introduction.BusinessCenterAddress}</div>
+                                <!--
+                                <div class="subtitle pricing">
+                                    <apex:pageBlock rendered="{!and(introduction.BusinessCenterCostLow != null, introduction.BusinessCenterCostHigh != null)}">
+                                        From &pound;{!introduction.BusinessCenterCostLow} to &pound;{!introduction.BusinessCenterCostHigh}
+                                    </apex:pageBlock>
+                                    <apex:pageBlock rendered="{!and(introduction.BusinessCenterCostLow != null, introduction.BusinessCenterCostHigh == null)}">
+                                        From &pound;{!introduction.BusinessCenterCostLow}
+                                    </apex:pageBlock>
+                                    <apex:pageBlock rendered="{!or(introduction.BusinessCenterCostLow == null, introduction.BusinessCenterCostHigh == null)}">
+                                        Pricing: POA
+                                    </apex:pageBlock>
+                                </div>
+								-->
+                            </div>
+                        </div>
+                        <div class="left_column_middle">
+                            <apex:pageBlock rendered="{!introduction.BusinessCenterShortlisted}">
+                                <div href="{!'/apex/IntroductionPageAction?id=' + introduction.Id + '&type=shortlistremove'}" data-href="{!'/apex/IntroductionPageAction?id=' + introduction.Id}" class="button" id="bcp_button_shortlist" title="Click here to remove this building from your shortlist folder">Remove from shortlist</div>
+                            </apex:pageBlock>
+                            <apex:pageBlock rendered="{!!introduction.BusinessCenterShortlisted}">
+                                <div href="{!'/apex/IntroductionPageAction?id=' + introduction.Id + '&type=shortlist'}" data-href="{!'/apex/IntroductionPageAction?id=' + introduction.Id}" class="button" id="bcp_button_shortlist" title="Click here to add this building to your shortlist folder">Add to Shortlist</div>
+                            </apex:pageBlock>
+                            
+                            <div href="" class="button" id="bcp_button_request" title="Click here to select a date and time to view this building">Request Viewing</div>
+                        </div>
+                        <div class="left_column_bottom">
+                            <div class="user_contact">
+                                <apex:pageBlock rendered="{!introduction.UserPhoto != null}">
+                                    <div class="photo">
+                                        <img src="{!introduction.UserPhoto}" />
+                                    </div>
+                                </apex:pageBlock>
+                                <div class="details">
+                                    <div class="title">Contact Me</div>
+                                    <div class="name">{!introduction.UserName}</div>
+                                    <div class="number"><a href="tel:{!introduction.UserPhone}">{!introduction.UserPhone}</a></div>
+                                    <div class="email"><a href="mailto:{!introduction.UserEmail}">{!introduction.UserEmail}</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="center_column">
+                        <div class="image_0" id="image-main" style="{!'background-image: url(' + introduction.BusinessCenterPhotoPrimary + ');'}"></div>
+                        <div class="image_stack">
+                            <apex:variable value="{!1}" var="count"/>
+                            <apex:variable value="{!'1'}" var="countString"/>
+                            <apex:repeat value="{!introduction.BusinessCenterPhotoOther}" var="photo" id="photoRepeater">
+                                
+                                <div class="image" id="{!'image-' + countString}" style="{!'background-image: url(' + photo + ');'}" onclick="{!'BCP_clickImage(' + countString + ')'}"></div>
+                                <apex:variable var="count" value="{!count + 1}"/>
+                                <apex:variable var="countString" value="{!count}"/>
+                                
+                            </apex:repeat>
+                        </div>
+                        <script>
+                            function BCP_clickImage(image) {
+                                let mainImage = document.getElementById('image-main').style.backgroundImage;
+                                let clickedImage = document.getElementById('image-' + image).style.backgroundImage;
+                                document.getElementById('image-' + image).style.backgroundImage = mainImage;
+                                document.getElementById('image-main').style.backgroundImage = clickedImage;
+                            }
+                        </script>
+                        <div class="map">
+                            <iframe style="border:0" loading="lazy" allowfullscreen="allowfullscreen" src="{!'https://www.google.com/maps/embed/v1/place?key=AIzaSyBLySPbZuVG5JdRjEZgAMRj_S483ifd1-I&q=' + introduction.BusinessCenterAddressEscaped}"></iframe>
+                        </div>
+                    </div>
+                    <div class="right_column">
+                        <div class="info">
+                            <div class="subitems">
+                                <apex:pageBlock rendered="{! (introduction.OptionNotes != '' || introduction.OptionTermLength != '' || introduction.OptionAvailableFrom != '' || introduction.OptionOptionSize != '' || introduction.OptionMonthlyQuotingRate != '' || introduction.OptionCostOfOccupancy != '')}">
+                                    <div class="option">
+                                        <div class="title">What’s on offer here?</div>
+                                        <apex:pageBlock rendered="{!introduction.OptionNotes != ''}">
+                                            <div class="option_item option_item_wide">
+                                                <span>Description</span><br/>
+                                                {!introduction.OptionNotes}
+                                            </div>
+                                        </apex:pageBlock>
+                                        <apex:pageBlock rendered="{!introduction.OptionTermLength != ''}">
+                                            <div class="option_item">
+                                                <span>Available length of term</span><br/>
+                                                {!introduction.OptionTermLength}
+                                            </div>
+                                        </apex:pageBlock>
+                                        <apex:pageBlock rendered="{!introduction.OptionAvailableFrom != ''}">
+                                            <div class="option_item">
+                                                <span>Earliest availability date</span><br/>
+                                                {!introduction.OptionAvailableFrom}
+                                            </div>
+                                        </apex:pageBlock>
+                                        <apex:pageBlock rendered="{!introduction.OptionOptionSize != ''}">
+                                            <div class="option_item">
+                                                <span>Office size</span><br/>
+                                                {!introduction.OptionOptionSize}
+                                            </div>
+                                        </apex:pageBlock>
+                                        <apex:pageBlock rendered="{!introduction.OptionMonthlyQuotingRate != ''}">
+                                            <div class="option_item">
+                                                <span>Monthly rent</span><br/>
+                                                {!introduction.OptionMonthlyQuotingRate}
+                                            </div>
+                                        </apex:pageBlock>
+                                        <apex:pageBlock rendered="{!introduction.OptionCostOfOccupancy != ''}">
+                                            <div class="option_item option_item_wide">
+                                                <span>Additional information</span><br/>
+                                                <apex:outputText value="{!SUBSTITUTE(JSENCODE(introduction.OptionCostOfOccupancy), '\\r\\n', '<br/>')}" escape="false" />
+                                            </div>
+                                        </apex:pageBlock>
+                                    </div>
+                                </apex:pageBlock>
+                                <div class="about">
+                                    <div class="title">About Building</div>
+                                    <div class="body">
+                                        <apex:pageBlock rendered="{!introduction.BusinessCenterOfficeLocation != ''}">
+                                            <p>
+                                                {!introduction.BusinessCenterOfficeLocation}
+                                            </p>
+                                        </apex:pageBlock>
+                                        <apex:pageBlock rendered="{!introduction.BusinessCenterPropertyDetails != ''}">
+                                            <p>
+                                                {!introduction.BusinessCenterPropertyDetails}
+                                            </p>
+                                        </apex:pageBlock>
+                                    </div>
+                                </div>
+                                <div class="subitem_stack">
+                                    <div class="amenities">
+                                        <div class="title">Amenities</div>
+                                        <div class="body">
+                                            <apex:repeat value="{!introduction.BusinessCenterAmenities}" var="amenity" id="amenityRepeater">
+                                                
+                                                <div class="amenity">
+                                                    <div class="logo">
+                                                        <img src="{!'https://dm079ng487zah.cloudfront.net/portals/flexioffices/' + amenity.Name + '.svg'}" />
+                                                    </div>
+                                                    <div class="name">
+                                                        {!amenity.Name}
+                                                    </div>
+                                                </div>
+                                                
+                                            </apex:repeat>
+                                        </div>
+                                    </div>
+                                    <div class="transport">
+                                        <div class="title">Transport</div>
+                                        <div class="body">
+                                            <div class="transport_item transport_item_template">
+                                                <div class="logo">
+                                                    <img src="" class="type" />
+                                                </div>
+                                                <div class="details">
+                                                    <span class="name"></span><br/><span class="distance"></span> <span class="slash">/</span> <span class="duration"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal_fader" id="bcp_modal_request">
+                    <div class="modal_body">
+                        <div class="modal_title">Request Viewing</div>
+                        <div class="processing">
+                            <div class="modal_content">
+                                Processing
+                            </div>
+                        </div>
+                        <div class="message">
+                            <div class="modal_content">
+                                Request completed
+                            </div>
+                            <div class="modal_footer">
+                                <input type="button" value="Close" class="button button_cancel" />
+                            </div>
+                        </div>
+                        <div class="form">
+                            <form id="bcp_request_viewing" method="POST" action="{!'/apex/IntroductionPageAction?id=' + introduction.Id}">
+                                <div class="m-2">
+                                    Viewing Date:
+                                    <div class="form-group">
+                                        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                            <input type="text" required="required" name="bcp_viewing_date" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+                                            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input id='timepicker' class="form-control mr-2" type="text" name="bcp_viewing_time" required="required" />
+                                    </div>
+                                </div>
+                                <div class="modal_footer">
+                                    <input type="button" value="Cancel" class="button button_cancel" />
+                                    <input type="submit" value="Request" class="button" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal_fader" id="bcp_modal_shortlist">
+                    <div class="modal_body">
+                        <div class="modal_title">Add to Shortlist</div>
+                        <div class="form">
+                            <div class="modal_content">
+                                Business Center added to your shortlist folder
+                            </div>
+                            <div class="modal_footer">
+                                <input type="button" value="Close" class="button button_cancel" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $('#timepicker').timepicker({
+                    timeFormat: 'hh:mm p',
+                    interval: 10,
+                    minTime: '8:59',
+                    maxTime: '17:00',
+                    defaultTime: '9:00',
+                    zindex: 700,
+                    dynamic: false,
+                    dropdown: true,
+                    scrollbar: true
+                });
+
+                $('#datetimepicker1').datetimepicker({
+                    format: 'DD/MM/YYYY',
+                    daysOfWeekDisabled: [0, 6]
+                });
+        
+                $('.modal_fader').click(function(e) {
+                    // $('.modal_fader').css('display', 'none');
+                });
+                $('.modal_body').click(function(e) {
+                    // e.stopPropagation();
+                });
+                $('.modal_fader .button_cancel').click(function(e) {
+                    $('.modal_fader').css('display', 'none');
+                });
+                
+                $('#bcp_button_shortlist').click(function(e) {
+                    e.preventDefault();
+                    $('#bcp_button_shortlist').addClass('button-disabled').text('Processing');
+                    $.ajax({
+                        url: $(this).attr('href'),
+                        success: function(ret) {
+                            dd.reset_next = true;
+                            $('#bcp_button_shortlist').removeClass('button-disabled');
+                            if(ret.shortlisted) {
+                                $('#bcp_button_shortlist')
+                                    .attr('title', 'Click here to remove this building from your shortlist folder')
+                                    .text('Remove from shortlist')
+                                    .attr('href', $('#bcp_button_shortlist').data('href') + '&type=shortlistremove');
+                            } else {
+                                $('#bcp_button_shortlist')
+                                    .attr('title', 'Click here to add this building to your shortlist folder')
+                                    .text('Add to shortlist')
+                                    .attr('href', $('#bcp_button_shortlist')
+                                    .data('href') + '&type=shortlist');
+                            }
+                        }
+                    });
+                });
+                $('#bcp_button_request').click(function(e) {
+                    e.preventDefault();
+                    $('#bcp_modal_request .message').hide();
+                    $('#bcp_modal_request .form').show();
+                    $('#bcp_modal_request').css('display', 'flex');
+                });
+                $('#bcp_modal_request form').submit(function(e) {
+                    e.preventDefault();
+                    $('#bcp_modal_request .form').hide();
+                    $('#bcp_modal_request .processing').show();
+                    $.ajax({
+                        url: this.action + '&type=request_viewing&date=' + $('input[name="bcp_viewing_date"]').val() + ' ' + $('input[name="bcp_viewing_time"]').val(),
+                        success: function() {
+                            $('#bcp_modal_request .processing').hide();
+                            $('#bcp_modal_request .message').show();
+                        }
+                    });
+                });
+                (function () {
+                    $('#bcp').data('renderStations', function(stations) {
+                        if(stations.length > 0) {
+                            var templ = $('.transport_item_template');
+                            var theClone;
+                            for(var i = 0; i < stations.length; i++) {
+                                theClone = templ.clone();
+                                theClone.find('.name').text(stations[i].name);
+                                theClone.find('.distance').text(stations[i].distance);
+                                theClone.find('.duration').text(stations[i].duration);
+                                theClone.find('.type').attr('src', stations[i].type == 'subway_station' ? 'https://assets1.flexioffices.co.uk/assets/subway-f75c7a0da50bd2506ae730421b1f4aced643dcbdc498f1110f0176803d543bb1.svg' : 'https://assets0.flexioffices.co.uk/assets/trait_thumb-56b18067aee8d745f5afdf4b6bd198be0cbf4a6a9a8063bc2c2d879aaa16f752.png');
+                                if(stations[i].type == 'subway_station') {
+                                    theClone.find('.type').css('margin-top', '3px');
+                                }
+                                theClone.removeClass('transport_item_template');
+                                theClone.appendTo('.transport .body');
+                                
+                            }
+                            $('.transport').show();
+                        }
+                    });
+                    if($('#bcp').data('transport')) {
+                        $('#bcp').data('renderStations')($('#bcp').data('transport'));
+                    } else {
+                        $.ajax({
+                            url: $('#bcp').data('action') + '&type=transport',
+                            success: $('#bcp').data('renderStations')
+                        });
+                    }
+                })();
+            </script>
+        </body>
+    </html>
+</apex:page>

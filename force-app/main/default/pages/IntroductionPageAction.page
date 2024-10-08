@@ -1,0 +1,1 @@
+<apex:page controller="IntroductionPageController" action="{!generateJSON}" contentType="application/json; charset=utf-8" cache="false" showHeader="false" standardStylesheets="false" sidebar="false">{!outputJson}</apex:page>

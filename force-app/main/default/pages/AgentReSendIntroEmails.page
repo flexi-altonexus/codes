@@ -1,0 +1,42 @@
+<apex:page standardController="Introduction__c" recordsetvar="recordList" extensions="AgentSearchWizardUtil">
+<apex:includeLightning />
+
+<div id="lightning" />
+	<!-- <script src="https://tvds.my.salesforce.com/lightning/lightning.out.js"></script>  -->
+	<apex:includeScript value="/lightning/lightning.out.js" />
+
+	<script>
+	    $Lightning.use("c:AgentReSendIntroEmailsApp", function() {
+	      $Lightning.createComponent("c:AgentReSendIntroEmails",
+	      {
+			  "introListJSON" : {!customIdsStr},
+			  "recordId" : '{!$CurrentPage.parameters.id}'
+	      },
+	      "lightning",
+	      function(component) {
+			$A.eventService.addHandler({
+                event: 'force:navigateToSObject',
+                handler: function(event) {
+                    if (sforce && sforce.one) {
+                        // VF page in S1 or Lightning Exp
+                        sforce.one.navigateToSObject(event.getParams().recordId);
+                    } else {
+                        // VF page in Classic
+                        window.location = '{!URLFOR($Action.Contact.Tab, $ObjectType.Contact)}';
+                    }
+                }
+			});
+			$A.eventService.addHandler({
+                event: 'force:showToast',
+                handler: function(event) {
+                    if (sforce && sforce.one) {
+                        // VF page in S1 or Lightning Exp
+                        sforce.one.showToast(event.getParams());
+                    }
+                }
+            });
+	      });
+		});
+	</script>
+
+</apex:page>

@@ -1,0 +1,56 @@
+<!--
+ * @name     : IntroductionsMap
+ * @who      : David Sanchez <david.sanchez@empaua.com>
+ * @when     : 2019-05-23
+ * @what     : Displays Opportunity's Introductions on a Google Map.
+ *
+ * Modification Log
+ * ============================================================================================================================
+ * #       Who               When            What
+ * ============================================================================================================================
+ -->
+<aura:component implements="force:hasRecordId,force:lightningQuickAction">
+  
+<!-- attributes -->
+    <aura:attribute name="mapMarkers" type="Object"/>
+    <aura:attribute name="zoomLevel" type="Integer" />
+    <aura:attribute name="markersTitle" type="String" />
+    <aura:attribute name="center" type="Object" />
+
+    <aura:html tag="style">
+        .slds-modal__container{
+            height : 100%;
+            width: 100%;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .modal-body{
+            height : 100%;
+            max-height: 100%;
+        }
+        .BCmap{
+             width :100%;
+             height :400px;
+        }
+        
+        .customFooter{
+            display: inline !important;
+        }
+    </aura:html>  
+
+    <!--HEADER-->
+    <header class="slds-modal__header" style="padding: 0.5rem; background: rgb(22, 50, 92);">
+        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-text-color_inverse slds-hyphenate">Map of Opportunity's Introductions</h2>
+    </header>
+    <br/>
+    <!-- the map component -->
+    <div class="container">
+        <c:displayOnGoogleMap markersTitle="Introductions" objectName="Introduction__c" nameField="BusinessCentre__r.name" parentnameField="BusinessCentre__r.Parent.name"
+                              filters="{!'RelatedToDeal__c = \'' + v.recordId + '\''}"
+                              longitudeField="BusinessCentre__r.BillingLongitude" latitudeField="BusinessCentre__r.BillingLatitude" 
+                              addressFields="BusinessCentre__r.billingStreet,BusinessCentre__r.billingCity,BusinessCentre__r.billingState,BusinessCentre__r.billingPostalcode,BusinessCentre__r.billingCountry"
+        />
+    </div>
+    <div class="slds-modal__footer">
+    </div>
+</aura:component>

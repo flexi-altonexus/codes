@@ -1,0 +1,48 @@
+<aura:component controller="DataDwellIntroductionOverviewController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:handler name="init" action="{!c.init}" value="{!this}" />
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="intros" type="Object[]" />
+    <aura:attribute name="loadCount" type="Integer" default="0" />
+    <div class="slds-panel slds-border_top slds-border_right slds-border_bottom slds-border_left">
+        <div class="slds-panel__header slds-p-around_medium">
+            <aura:if isTrue="{!v.loadCount > 0}">
+                <div class="dd-spin-container">
+                    <div class="slds-spinner slds-spinner_small" role="alert">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </aura:if>
+            <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Introductions in Data Dwell">Introductions in Data Dwell</h2>
+        </div>
+        <div class="slds-panel__body">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th scope="col">
+                            <div class="slds-truncate" title="Business Centre">Business Centre</div>
+                        </th>
+                        <!--<th scope="col">
+                            <div class="slds-truncate" title="Shortlisted">Shortlisted</div>
+                        </th>-->
+                        <th scope="col">
+                            <div class="slds-truncate slds-float_right" title="Shortlisted">Has Options</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate slds-float_right" title="In Portal">In Portal</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate slds-float_right" title="Opened">Opened</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.intros}" var="intro">
+                        <c:DataDwellIntroductionOverviewItem intro="{!intro}" recordId="{!v.recordId}" loadCount="{!v.loadCount}" />
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</aura:component>

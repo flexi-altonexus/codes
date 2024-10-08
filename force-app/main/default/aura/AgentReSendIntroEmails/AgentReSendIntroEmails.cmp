@@ -1,0 +1,29 @@
+<aura:component controller="AgentReSendIntroEmailsController" implements="force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction,flexipage:availableForRecordHome,force:hasRecordId" access="global">
+
+<!-- HANDLER-->
+<aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+<!-- Records Selected on VF -->
+<aura:attribute name="introListJSON" type="String"/>
+<aura:attribute name="data" type="List" />
+<aura:attribute name="columns" type="List" />
+<aura:attribute name="draftValues" type="List"/>
+<aura:attribute name="recordId" type="Id"/>
+<aura:attribute name="showSpinner" type="Boolean" default="false"/>
+
+
+<lightning:card title="Re-Send Introduction Emails">
+    <lightning:datatable columns="{! v.columns }" data="{! v.data }" keyField="Id"
+                         aura:id="unitTable" hideCheckboxColumn="true" onsave="{!c.saveDraftValues}" draftValues="{!v.draftValues}"/>
+    <div style="margin: 0 auto; width: 250px; padding-top:15px">
+        <lightning:buttongroup>
+            <lightning:button label="Cancel" onclick="{!c.cancel}"></lightning:button>
+            <lightning:button variant="brand" label="Send" onclick="{!c.sendEmails}"></lightning:button>
+        </lightning:buttongroup>
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner></lightning:spinner>
+        </aura:if>
+    </div>
+</lightning:card>
+
+</aura:component>

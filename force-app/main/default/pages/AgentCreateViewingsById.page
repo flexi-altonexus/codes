@@ -1,0 +1,21 @@
+<apex:page action="{!initController}" controller="AgentSearchWizardUtil">
+<apex:includeLightning /> 
+
+<div id="lightning" />
+	<!--"https://flexioffices--empauadev--c.cs105.visual.force.com/apex/AgentCreateViewingsBypassIds?schViewId=a071w0000015RfZAA>  -->
+	<apex:includeScript value="/lightning/lightning.out.js" />
+
+	<script>
+	    $Lightning.use("c:AgentCreateViewingsApp", function() {
+	      $Lightning.createComponent("c:AgentCreateViewings",
+	      {
+	        	"viewingScheduleId" : "{!viewSchId}"
+	      },
+	      "lightning",
+	      function(component) {
+
+	      });
+	    });
+	</script>
+
+</apex:page>

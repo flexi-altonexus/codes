@@ -1,0 +1,154 @@
+<apex:component access="global" controller="EmailController">
+    <apex:attribute name="theLeadId" type="Id" assignTo="{!leadId}" description="Id of Lead"/>
+    <apex:attribute name="theOppId" type="Id" assignTo="{!oppId}" description="Id of Opportunity"/>
+    <apex:repeat value="{!Intros}" var="i">
+        
+        
+        
+                  <tr>
+                    <td class="em_aside15" align="center">
+
+
+                      <table border="0" cellpadding="0" cellspacing="0" class="full-width" style="width: 600px;" width="600">
+                        <tr>
+                          <td>
+
+                             <table align="left" border="0" cellpadding="0" cellspacing="0" class="full-width" style="width: 400px;" width="400">
+                              <tr>
+                                <td bgcolor="#b2bbc4" style="color:#333333; font-family:'Montserrat', Arial, sans-serif; font-weight:500; font-size:16px;line-height:1.3;padding: 10px">
+                                  {!i.BusinessCentre__r.Name}
+                                </td>
+                               </tr>
+                             </table>
+                              
+                             <table align="left" border="0" cellpadding="0" cellspacing="0" class="full-width" style="width: 400px;" width="400">
+                              <!-- Amber Jones information -1- -->
+                              <apex:outputPanel id="amberJones1" rendered="{!isAmberJones}">
+                                <tr>
+                                  <td valign="top" width="40%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;font-weight:bold;padding: 10px">
+                                    Contact:
+                                  </td>
+                                  <td valign="top" width="60%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;padding: 10px">
+                                    {!i.BusinessCentre__r.Introduction_Manager__r.Name}
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td valign="top" width="40%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;font-weight:bold;padding: 10px">
+                                    Telephone:
+                                  </td>
+                                  <td valign="top" width="60%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;padding: 10px">
+                                    {!i.BusinessCentre__r.Phone}
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td valign="top" width="40%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;font-weight:bold;padding: 10px">
+                                    Email:
+                                  </td>
+                                  <td valign="top" width="60%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;padding: 10px">
+                                    {!i.BusinessCentre__r.Introduction_Manager_Email__c}
+                                  </td>
+                                </tr>
+                            </apex:outputPanel>
+                            <!-- END Amber Jones information -1- -->
+                           
+                              <tr>
+                                <td valign="top" width="40%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;font-weight:bold;padding: 10px">
+                                  Website:
+                                </td>
+                                <td valign="top" width="60%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;padding: 10px">
+                                    <apex:outputLink style="color:#89bb1d" value="{!IF(BEGINS(LOWER(i.BusinessCentre__r.FlexiWebsiteLink__c),'http'), i.BusinessCentre__r.FlexiWebsiteLink__c, 'http://'+i.BusinessCentre__r.FlexiWebsiteLink__c)}">View Property</apex:outputLink>
+                                  <!--<apex:outputLink style="color:#89bb1d" value="https://google.com/maps/?q={!v.BusinessCentre__r.BillingStreet} {!v.BusinessCentre__r.BillingCity} {!v.BusinessCentre__r.BillingCountry} {!v.BusinessCentre__r.BillingPostalCode}">View Map</apex:outputLink>-->
+                                </td>
+                              </tr>
+                           
+                               <!-- Amber Jones information -2- 
+                              <apex:outputPanel id="amberJones2" rendered="{!isAmberJones}">
+                              <tr>
+                                <td valign="top" width="40%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;font-weight:bold;padding: 10px">
+                                  Guide Price:
+                                </td>
+                                <td valign="top" width="60%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;padding: 10px">
+                                  {!i.GuidePrice__c}
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                             -->
+
+                              <tr>
+                                <td valign="top" width="40%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;font-weight:bold;padding: 10px">
+                                  Additional information:
+                                </td>
+                                <td valign="top" width="60%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;padding: 10px">
+                                  {!i.Notes__c}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td valign="top" width="40%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;font-weight:bold;padding: 10px">
+                                  Features:
+                                </td>
+                                <td valign="top" width="60%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;padding: 10px">
+                                  <apex:repeat value="{!$ObjectType.Account.FieldSets.Features}" var="f">
+                        {!IF(i.BusinessCentre__r[f], f.Label+',','')}
+                    </apex:repeat>
+                       Disability Access: {!i.BusinessCentre__r.DisabilityAccess__c}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td valign="top" width="40%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;font-weight:bold;padding: 10px">
+                                  Description:
+                                </td>
+                                <td valign="top" width="60%" style="color:#9b9b9b; font-family:'poppins', Arial, sans-serif; font-size:14px; line-height:1.3;padding: 10px">
+                                  {!i.BusinessCentre__r.OfficeLocation__c}&nbsp;{!i.BusinessCentre__r.PropertyDetails__c}
+                                </td>
+                              </tr>
+                               
+                              
+                            </table
+                            >
+
+                            <!--[if gte mso 9]></td><td valign="top"><![endif]-->
+
+
+                            <table align="right" border="0" cellpadding="0" cellspacing="0" class="full-width bg-change" style="width: 180px;" width="180">
+                              <tr>
+                                <td align="center">
+                                    <img alt="Primary Image" src="{!i.BusinessCentre__r.PrimaryImage__c}" width="180" style="width:180px; padding:0 0 10px;" class="third-width"/>
+                                
+                                    <img alt="Secondary Image" src="{!i.BusinessCentre__r.SecondaryImage__c}" width="180" style="width:180px; padding:0 0 10px;" class="third-width"/>
+                          
+                                    <img alt="Tertiary Image" src="{!i.BusinessCentre__r.TertiaryImage__c}" width="180" style="width:180px" class="third-width"/>
+                                </td>
+                              </tr>
+                            </table
+                            >
+
+                          </td>
+                        </tr>
+                      </table>
+                      
+
+            
+            
+        
+        
+               <table border="0" cellpadding="0" cellspacing="0" class="full-width" style="width: 600px;" width="600">
+                  <tr>
+                    <td align="center" style="padding:20px 0">
+                     <table cellspacing="0" cellpadding="0" border="0" width="100%" style="width: 100% !important;">
+                       <tr>
+                        <td align="left" valign="top" width="600px" height="2" style="background-color: #89bb1d; border-collapse:collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-line-height-rule: exactly; line-height: 2px;"><!--[if gte mso 15]>&nbsp;<![endif]--></td>
+                      </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                
+                
+                    </td>
+                  </tr>
+               
+       
+    </apex:repeat>
+</apex:component>

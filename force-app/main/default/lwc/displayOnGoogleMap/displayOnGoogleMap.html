@@ -1,0 +1,26 @@
+<!--
+ * @name     : DisplayOnGoogleMap
+ * @who      : David Sanchez <david.sanchez@empaua.com>
+ * @when     : 2019-05-23
+ * @what     : Displays on a Google Map the locations selected according to the criteria provided
+ *             by the parameter attributes.
+ * @Parameter: objectName - name of the object from which the locations will be selected.
+ *             longitudeField - name for the longitude field (e.g. billingLongitude).
+ *             latitudeField  - name for the latitude field (e.g. client__r.billingLatitude).
+ *             nameField - name of descritive field (e.g. contact.name).
+ *             addressFields - name of address fields. These are comma separated (e.g. MailingStreet, MailingCity, MailingCountry).
+ *             filters - string which will by added to WHERE clause to filter the records selected
+ *                       (e.g OpportunyRef__c = '0061w0000193EasAAE' AND OpportunityRef__r.StageName = 'Negotiations')
+ *             markersTitle - header to be shown on Map for the markers list (e.g. Introductions).
+ *
+ * Modification Log
+ * ============================================================================================================================
+ * #       Who               When            What
+ * ============================================================================================================================
+ -->
+<template>
+    <template if:true={mapMarkers}>
+        <lightning-map map-markers={mapMarkers} zoom-level={zoomLevel} markers-title={markersTitle}>
+        </lightning-map>
+    </template>
+</template>

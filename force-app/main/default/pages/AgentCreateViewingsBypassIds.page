@@ -1,0 +1,21 @@
+<apex:page standardController="Introduction__c" recordsetvar="recordList" extensions="AgentSearchWizardUtil">
+<apex:includeLightning />
+
+<div id="lightning" />
+	<!-- <script src="https://tvds.my.salesforce.com/lightning/lightning.out.js"></script>  -->
+	<apex:includeScript value="/lightning/lightning.out.js" />
+
+	<script>
+	    $Lightning.use("c:AgentCreateViewingsApp", function() {
+	      $Lightning.createComponent("c:AgentCreateViewings",
+	      {
+	          "introListJSON" : {!customIdsStr}
+	      },
+	      "lightning",
+	      function(component) {
+
+	      });
+	    });
+	</script>
+
+</apex:page>

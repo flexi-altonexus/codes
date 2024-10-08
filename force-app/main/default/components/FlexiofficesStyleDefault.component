@@ -1,0 +1,444 @@
+<apex:component >
+<link as="font" crossorigin="anonymous" href="https://assets0.flexioffices.co.uk/assets/Futura-Normal-Bt-bf42509f521fc7fd13221780dfc76eb4121e010a8f24438c115521108a838097.ttf" rel="preload" type="font/ttf" />
+<link as="font" crossorigin="anonymous" href="https://assets2.flexioffices.co.uk/assets/Futura-Light-Bt-3a6bbc1a02cc15adeb488c3244d3ceac05eef2cdd280f6a24d64820b51a390e8.ttf" rel="preload" type="font/ttf" />
+<link as="font" crossorigin="anonymous" href="https://assets3.flexioffices.co.uk/assets/Futura-ExtraBold-Bt-ad46885f3796b7623672e89925351aff9687c120c050207d1bee488b637f8c77.ttf" rel="preload" type="font/ttf" />
+<style>
+    /* 
+        camelCase: Custom nodes written in Salesforce
+        snake_case: Nodes in package, do not change the names
+    */
+    * {
+        font-family: Tahoma,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    }
+    body {
+    }
+    
+    #presentation_list .presentation .title {
+        width: 100% !important;
+        text-align: center !important;
+        font-weight: 200;
+    }
+
+    #landing #presentation_list .presentation .text p.title {
+        padding: 18px;
+    }
+    body {
+        background-color: white;
+    }
+    #customTopbar {
+        background-color: #114574;
+        background-image: url('https://dm079ng487zah.cloudfront.net/portals/flexioffices/img/backgroundblue.gif');
+        background-repeat: no-repeat;
+        background-position: top left;
+        position: fixed;
+        height: 155px;
+        z-index: 100;
+        width: 100%;
+        display: block !important;
+        border-bottom: rgba(0,0,0,0) solid 1px;
+        top: 0;
+    }
+    #customTopbar .whiteBg {
+    }
+    #customTopbar .logo {
+        height: 95px;
+        margin: 15px 0 0 0;
+    }
+    #customTopbar .logosColumn {
+        float: left;
+    }
+    #customTopbar .centerColumn {
+        width: 340px;
+        position: fixed;
+        top: 0;
+        left: 80px;
+        align-items: center;
+        display: flex;
+        height: 155px;
+        padding-left: 5px;
+        line-height: 1.1rem;
+    }
+
+    #customTopbar .logosColumn{
+        float:none;
+        text-align:center;
+        padding:15px;
+    }
+    .presentation_name {
+        font-size: 1.1rem;
+        display: block;
+        text-align: left;
+    }
+    #customTopbar .buttonColumn {
+        float: right;
+        margin-top: 20px;
+    }
+    #customTopbar .centerColumn .presentation_name {
+        color: white;
+    }
+    .gate {
+        margin-top: 90px;
+        background: white;
+        width: 100%;
+        height: 100%;
+        padding-left: calc(50% - 175px);
+        padding-right: calc(50% - 175px);
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    .gate .btn-primary {
+        background-color: #2322F0;
+        border-color: #2322F0;
+    }
+    .ddc_button {
+        margin-right: 20px;
+        display: block;
+        float: right;
+    }
+    .ddc_button a {
+        background: #0E4573;
+        color: white !important;
+        height: 30px;
+        width: 30px;
+        display: block;
+        padding: 5px;
+        border-radius: 2px;
+    }
+    #wrapper {
+        background-color: #114574;
+        background-image: url('https://dm079ng487zah.cloudfront.net/portals/flexioffices/img/backgroundblue.gif');
+        background-repeat: no-repeat;
+        background-position: top left;
+    }
+    #presentation #stage, #loading {
+        background: transparent;
+    }    
+    #presentation #stage, #loading {
+        background-color: #114574;
+    }    
+    #presentation #thumbnails_stage {
+        background: transparent;
+        bottom: 50px;
+    }
+    #presentation #stage .actor_nav {
+        background: rgba(2, 10, 81, 0.1);
+    }
+    #presentation #stage {
+        top: 70px !important;
+    }
+    #presentation #stage #actors {
+        margin-top: -70px !important;
+    }
+    #consent .consent_container p {
+        background: white;
+        color: rgb(32, 47, 55);
+    }
+    #consent .consent_container p a {
+        color: rgb(32, 47, 55);
+    }
+    .btn-success {
+        background: #202F37;
+        border-color: #202F37;
+    }
+    #loading {
+        height: calc(100% - 70px);
+        top: 70px;
+    }
+    #loading div {
+        background: white;
+    }
+    #bottombar {
+        background: white;
+        height: 25px;
+    }
+    #bottombar #consent_control, #bottombar>#dd {
+        line-height: 25px;
+    }
+    #bottombar #consent_control a, #bottombar>#dd>a {
+        color: rgb(32, 47, 55);
+    }
+    #landing {
+        height: calc(100% - 125px);
+    }
+    #landing #presentation_list .presentation {
+        margin: 20px;
+        -webkit-box-shadow: 4px 4px 10px -1px rgba(0,0,0,0.12);
+        -moz-box-shadow: 4px 4px 10px -1px rgba(0,0,0,0.12);
+        box-shadow: 4px 4px 10px -1px rgba(0,0,0,0.12);
+        background: white;
+        border: 0;
+        border-radius: 0;
+    }
+    #landing #presentation_list .presentation .text {
+        background: white;
+        color: #333;
+        font-size: 14px;
+    }
+    #landing #presentation_list .presentation:hover {
+    }
+    #landing #presentation_list .presentation:hover .text {
+        background: white;
+        color: #333;
+
+    }
+    #landing #presentation_list .presentation .thumbnail img, #landing #presentation_list .presentation .thumbnail canvas {
+        max-height: 150px;
+        max-width: 150px;
+        border: 0;
+        border-radius: 0;
+    }
+    #landing.has_welcome {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    #landing.has_welcome #welcome {
+        width: 100%;
+        margin: 0;
+        max-width: 1320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #landing.has_welcome #welcome .video {
+        float: right;
+        width: 50%;
+        padding: 40px 50px 0 15px;
+    }
+    #landing.has_welcome #welcome .video video {
+        background: #ccc;
+    }
+    #landing.has_welcome #welcome .title {
+        color: #2DB4E6;
+        padding-left: 15px;
+        margin-bottom: 0;
+    }
+    #landing.has_welcome #welcome .message {
+        color: #efefef !important;
+    }
+    #landing.has_welcome #welcome .message::before {
+        display: none;
+    }
+    #landing.has_welcome #welcome.no-video {
+        text-align: center;
+    }
+    #landing.has_welcome #welcome.no-video .title {
+        padding: 0;
+        width: 50%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    #landing.has_welcome #welcome.no-video .message {
+        padding: 0;
+        float: none;
+        width: 65% !important;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center;
+    	line-height: 0.9;
+    }
+    #landing.has_welcome #welcome .message {
+        float: left;
+        width: 50%;
+        padding: 20px 15px 0 55px;
+        color: #FFFFFF;
+    }
+    #landing.has_welcome #presentation_list {
+        width: auto;
+        margin-top: 10px;
+        max-width: 1320px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-bottom: 100px;
+    }
+    #landing.has_welcome #presentation_list .presentation {
+        margin: 15px;
+    }
+
+    html, body{
+        font-family:'Mulish', Tahoma, Arial, sans-serif, sans;
+    }
+
+    #landing_title, #landing_body{
+        display:none;
+    }
+
+
+    #landing.has_welcome #welcome .message::before{
+        font-size: 44px;
+        font-weight:800;
+        line-height: 1.3em;
+        font-family:'Mulish', Tahoma, Arial, sans-serif, sans;
+    }
+
+    #landing.has_welcome #welcome .message{
+        font-size:14px;
+        font-family:'Mulish', Tahoma, Arial, sans-serif, sans;
+        line-height:1.4em;
+        color:#4b4f63;
+    }
+
+
+    #landing.has_welcome #welcome {
+        width: 100%;
+        margin: 0 auto;
+        padding: 30px 0;
+        max-width: 1200px;
+    }
+
+    #landing.has_welcome #welcome .message {
+        padding:15px;
+        margin:0;
+    }
+
+    #landing.has_welcome #welcome .video{
+        padding:15px;
+        margin:0;
+    }
+
+    #landing #presentation_list{
+        max-width:1200px !important;
+        margin:30px auto 0 auto;
+        padding:15px;
+        width:100% !important;
+    }
+
+    #landing #presentation_list .presentation .thumbnail{
+        margin:0 auto;
+    }
+
+    #landing #presentation_list .presentation .thumbnail .thumbnail_folder{
+        border:none;
+    }
+
+    #bottombar{
+        height:40px;
+    }
+
+    #bottombar #consent_control, #bottombar>#dd{
+        top:5px;
+    }
+
+    #landing #presentation_list .presentation .thumbnail div {
+        background-image: url('https://dm079ng487zah.cloudfront.net/portals/flexioffices/folders/folder.png') !important;
+    }
+
+    #landing #presentation_list .presentation.folder_name_YourOptions .thumbnail div {
+        background-image: url('https://dm079ng487zah.cloudfront.net/portals/flexioffices/folders/details.png') !important;
+    }
+
+    #landing #presentation_list .presentation.folder_name_Back .thumbnail div {
+        background-image: url('https://dm079ng487zah.cloudfront.net/portals/flexioffices/folders/back.png') !important;
+    }
+
+    #landing #presentation_list .presentation.folder_name_Shortlist .thumbnail div {
+        background-image: url('https://dm079ng487zah.cloudfront.net/portals/flexioffices/folders/shortlist.png') !important;
+    }
+    
+    #landing #presentation_list .presentation.folder_name_CaseStudies .thumbnail div {
+    background-image: url('https://d1hcd0ewdvxm92.cloudfront.net/accounts/flexioffices/Case%20Studies%20Icon%20(Dark%20Blue)-06.png') !important;
+    }
+
+    #landing #presentation_list .presentation.folder_name_Floorplans .thumbnail div {
+        background-image: url('https://d1hcd0ewdvxm92.cloudfront.net/accounts/flexioffices/Floorplans%20Icon%20(Dark%20Blue)-08.png') !important;
+    }
+
+    #landing #presentation_list .presentation.folder_name_Proposals .thumbnail div {
+        background-image: url('https://d1hcd0ewdvxm92.cloudfront.net/accounts/flexioffices/Proposals%20Icon%20(Dark%20Blue)-09.png') !important;
+    }
+
+    #landing #presentation_list .presentation.folder_name_Resources .thumbnail div {
+        background-image: url('https://d1hcd0ewdvxm92.cloudfront.net/accounts/flexioffices/Resources%20Icon%20(Dark%20Blue)-04.png') !important;
+    }
+
+    #landing #presentation_list .presentation.folder_name_ThirdParties .thumbnail div {
+        background-image: url('https://d1hcd0ewdvxm92.cloudfront.net/accounts/flexioffices/Third%20Parties%20Icon%20(Dark%20Blue)-07.png') !important;
+    }
+
+    #landing #presentation_list .presentation.folder_name_Viewings .thumbnail div {
+        background-image: url('https://d1hcd0ewdvxm92.cloudfront.net/accounts/flexioffices/Viewings%20Icon%20(Dark%20Blue)-05.png') !important;
+    }
+    
+    @media (max-width: 1150px) {
+        #customTopbar .logosColumn {  
+            margin-top: 59px;
+        }
+        #customTopbar .centerColumn {
+            left: 0;
+            text-align: center;
+        }
+        #customTopbar .centerColumn .presentation_name {
+            margin: 0 auto;
+        }
+    }
+    @media screen and (max-width: 1320px) {
+        #landing.has_welcome #welcome, #landing.has_welcome #presentation_list {
+            max-width: 1120px;
+        }
+    }
+    @media screen and (max-width: 1150px) {
+        #landing.has_welcome #welcome .video {
+            padding: 40px 30px 30px 30px;
+            width: 100%;
+            float: none;
+        }
+        #landing.has_welcome #welcome .message {
+            float: none;
+            width: 100%;
+            padding: 30px;
+            margin: 0;
+        }
+        #landing.has_welcome #welcome {
+            margin-top: 50px !important;
+        }
+        #customTopbar {
+            height: 215px;
+        }
+        #customTopbar .whiteBg {
+            height: 128px;
+        }
+        #customTopbar .logosColumn {
+            width: 100%;
+            height: 90px;
+            text-align: center;
+        }
+        #customTopbar .centerColumn {
+            width: 100%;
+        }
+        #customTopbar .centerColumn .presentation_name {
+            margin-top: 0;
+            text-align: center;
+        	padding-bottom: 25px;
+        }
+        #customTopbar .buttonColumn {
+            position: absolute;
+            top: 12px;
+            right: 0;
+            margin-top: 0;
+        }
+        .switcher {
+            position: absolute;
+            top: -33px;
+            z-index: 100;
+        }
+    }
+
+
+    @media only screen and (max-width:636px){
+        #landing #presentation_list .presentation{
+        }
+    }
+    .switcher {
+        display: none;
+        position: absolute;
+        text-decoration: underline !important;
+        float: left;
+        cursor: pointer;
+        left: 20px;
+        margin-top: 49px;
+        color: white !important;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    
+</style>
+</apex:component>

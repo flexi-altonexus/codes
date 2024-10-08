@@ -1,0 +1,6 @@
+<design:component label="Data Dwell - License Check">
+    <design:attribute name="client" label="Client" datasource="Salesforce,Gmail/Outlook" default="Salesforce" description="Is it in Gmail/Outlook or standard Salesforce?" />
+    <design:attribute name="displayPanel" label="Display Panel" default="true" description="Display the component on a panel?" />
+    <design:attribute name="componentDisplayMode" label="Display Mode" datasource="Auto Select,Activities,Record Share,Utility Bar" default="Auto Select" description="What should be displayed?" />
+    <design:attribute name="pageSize" label="Content Page Size" default="10" description="How many items should be displayed per page?" />
+</design:component>

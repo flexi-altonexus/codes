@@ -1,0 +1,75 @@
+<template>
+    <section class="slds-popover" role="dialog" if:true={contents}>
+        <lightning-button-icon
+            icon-name="utility:close"
+            size="small"
+            variant="bare"
+            class="slds-float_right slds-popover__close"
+            onclick={closePopover}
+        ></lightning-button-icon>
+        <div class="slds-popover__body">
+            <div>
+                <b>{contents.title}</b>
+            </div>
+
+            <table>
+                <tr>
+                    <td>
+                        <a title="Add" onclick={addClicked}>
+                            <img
+                                src="https://flexioffices--c.eu30.visual.force.com/resource/1580197515000/AgentSearchAdd"
+                                style="height: 30px; padding: 5px;float: left;"
+                            />
+                        </a>
+                    </td>
+                    <td>
+                        <a title="Remove" onclick={removeClicked}>
+                            <img
+                                src="https://flexioffices--c.eu30.visual.force.com/resource/1580197611000/AgentSearchRemove"
+                                style="height: 30px; padding: 5px;float: left;"
+                            />
+                        </a>
+                    </td>
+                    <td>
+                        <a title="Web" href={contents.webUrl} target="_blank">
+                            <img
+                                src="https://flexioffices--c.eu30.visual.force.com/resource/1580197664000/AgentSearchWeb"
+                                style="height: 30px; padding: 5px;float: left;"
+                            />
+                        </a>
+                    </td>
+                    <td>
+                        <a title="CRM" href={crmLink} target="_blank">
+                            <img
+                                src="https://flexioffices--c.eu30.visual.force.com/resource/1580197700000/AgentSearchCRM"
+                                style="height: 30px; padding: 5px;float: left;"
+                            />
+                        </a>
+                    </td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td><b>Distance:</b> {contents.distance}</td>
+                </tr>
+                <tr>
+                    <td><b>Type:</b> {contents.type}</td>
+                </tr>
+                <tr>
+                    <td><b>Phone:</b> {contents.phone}</td>
+                </tr>
+                <tr>
+                    <td><b>BC Company:</b> {contents.bcCompany}</td>
+                </tr>
+                <tr>
+                    <td><b>Payment Ad: </b>{contents.paymentAd}</td>
+                </tr>
+            </table>
+
+            <div>
+                <img src={contents.imageUrl} width="150px" />
+            </div>
+        </div>
+    </section>
+</template>

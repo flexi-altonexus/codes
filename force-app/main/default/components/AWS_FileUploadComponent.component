@@ -1,0 +1,278 @@
+<apex:component controller="AWS_FileUploadController" allowDML="true">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<apex:attribute name="parentId" description="The ID of the record uploaded documents will be attached to." type="String" required="true"/>
+    <apex:includeScript value="{!URLFOR($Resource.AWSJquery,'/jquery-3.4.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.AwsSdk,'/dist/aws-sdk.min.js')}"/>
+    <script type="text/javascript">
+        
+    	//var lexOrigin = 'https://flexioffices.lightning.force.com/';
+    	
+        //TODO Update PRO instance
+        var lexOrigin = '{!salesforceInstance}';
+        console.log('lexOrigin JC ' + lexOrigin);
+
+        //Data for Google map
+        var data;
+
+        //Send message to LC
+        function sendToLC(message) {
+            if(typeof(lexOrigin) != 'undefined'){
+                parent.postMessage(message, lexOrigin);
+            }
+        }
+
+        var files;
+        var currentFile;
+        var $upload;
+        var parentId = '{!parentId}';
+
+        window.addEventListener("dragover",function(e){
+          e = e || event;
+          e.preventDefault();
+        },false);
+        window.addEventListener("drop",function(e){
+          e = e || event;
+          e.preventDefault();
+        },false);
+
+        var j$ = jQuery.noConflict();
+        j$(document).ready(function() {
+
+            //Event listener for drop zone
+            var obj = j$(".slds-file-selector__dropzone");
+            obj.on('dragenter', function (e) 
+            {
+                e.stopPropagation();
+                e.preventDefault();
+                j$(this).addClass("slds-has-drag-over");
+            });
+            obj.on('dragover', function (e) 
+            {
+                 e.stopPropagation();
+                 e.preventDefault();
+            });
+            obj.on('dragleave', function (e) 
+            {
+                 j$(this).removeClass("slds-has-drag-over");
+                 e.preventDefault();
+            });
+            obj.on('drop', function (e) 
+            {                 
+                j$(this).removeClass("slds-has-drag-over");
+                e.preventDefault();
+                var droppedFiles = e.originalEvent.dataTransfer.files;
+                prepareFileUploads(droppedFiles);
+            });
+
+            //Event listener for inputFile
+            j$("#filesInput").on('change', function(e) {
+                e.preventDefault();
+                var inputFiles = document.getElementById('filesInput').files;
+                prepareFileUploads(inputFiles);
+            });
+        });
+
+
+
+        
+
+        //Executes when start Upload button is selected
+        function prepareFileUploads(uploadedFiles){
+            //Get the file(s) from the input field
+            files = uploadedFiles;
+            //console.log(files);
+            //Only proceed if there are files selected
+            if(files.length == 0){
+                alert('Select a file');
+                return; //end function
+            }
+
+            //Disable inputs and buttons during the upload process
+            j$(".uploadBox input").attr("disabled", "disabled");
+            j$(".uploadBox button").addClass("disabled");
+
+            //Build out the upload divs for each file selected
+            var uploadMarkup = '';
+
+            for(i = 0; i < files.length; i++){
+                //Determine file display size
+
+                if(files[i].size < 1000000){
+                    var displaySize = Math.floor(files[i].size/1000) + 'K';
+                }else{
+                    var displaySize  = Math.round((files[i].size / 1000000)*10)/10 + 'MB';
+                }
+
+                //console.log('prepareFileUploads displaySize: '+displaySize);
+
+                //For each file being uploaded create a div to represent that file, includes file size, status bar, etc. data-Status tracks status of upload
+                uploadMarkup += '<div class="upload slds-grid slds-wrap slds-grid--pull-padded" data-status="pending" data-index="'+i+'">'; //index used to correspond these upload boxes to records in the files array
+                uploadMarkup += '<div class="fileName slds-p-around--x-small slds-size--1-of-3"><span class="name">'+ files[i].name + '</span> - '+ displaySize+ '</div>';
+                uploadMarkup += '<div class="slds-progress slds-size--1-of-3 slds-p-around--x-small">';
+                uploadMarkup += '<ol class="slds-progress__list">';
+			    uploadMarkup += '<li class="slds-progress__item slds-is-active" id="start">';
+			    uploadMarkup += '<button class="slds-button slds-progress__marker" title="Inicializado" onclick="return false;">';
+			    uploadMarkup += '<span class="slds-assistive-text">Starting..</span>';
+			    uploadMarkup += '</button>';
+			    uploadMarkup += '</li>';
+			    uploadMarkup += '<li class="slds-progress__item" id="end">';
+			    uploadMarkup += '<button class="slds-button slds-progress__marker" title="Finalizado" onclick="return false;">';
+			    uploadMarkup += '<span class="slds-assistive-text">Completed</span>';
+			    uploadMarkup += '</button>';
+			    uploadMarkup += '</li>';
+			    uploadMarkup += '</ol>';
+                uploadMarkup += '<div class="slds-progress-bar">';
+			    uploadMarkup += '<span class="slds-progress-bar__value" style="width:0%;">';
+			    uploadMarkup += '<span class="slds-assistive-text percentComplete">0%</span>';
+			    uploadMarkup += '</span>';
+			  	uploadMarkup += '</div>';
+                uploadMarkup += '</div>';
+                uploadMarkup += '<div class="percentComplete slds-size--1-of-3 slds-p-around--x-small slds-text-align--left">0%</div>';
+                uploadMarkup += '</div>';
+            }
+
+
+            //Add markup to the upload box
+            j$('.uploadBox').append(uploadMarkup);
+
+            //Once elements have been added to the page representing the uploads, start the actual upload process
+            checkForUploads();
+        }
+
+        function checkForUploads(){
+            //Get div of the first matching upload element that is 'pending', if none, all uploads are complete
+            $upload = j$(".upload[data-status='pending']").first();
+            //console.log($upload);
+            if($upload.length != 0){
+                //Based on index of the div, get correct file from files array
+                currentFile = files[$upload.attr('data-index')];
+                //console.log(currentFile);
+                //console.log(currentFile["type"]);
+                var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
+                if (j$.inArray(currentFile["type"], ValidImageTypes) < 0) {
+                     processFile(false);
+                } else {
+                    processFile(true);
+                }
+
+            }else{
+                //console.log('Ya no hay más archivos pendientes');
+                //All uploads completed, enable the input and buttons
+                j$(".uploadBox input").removeAttr("disabled");
+                console.log('Disparar refresh del component');
+                var vfHost = "{!LEFT($CurrentPage.URL,FIND('/',$CurrentPage.URL,9))}";
+                sendToLC({'state':'LOADED', 'vfHost': vfHost});
+            }
+        }
+
+
+        function processFile(isImage){
+            //console.log('isimage: ' + isImage);
+            console.log('Processing File');
+            //var AWS = require('aws-sdk');
+            AWS.config.update({accessKeyId: '{!key}', secretAccessKey: '{!secret}'});
+            AWS.config.region = '{!region}';
+
+            var bucket = new AWS.S3({params: {Bucket: '{!bucket}'}});
+            //var bucket = new AWS.S3();
+
+            if (currentFile) {
+                var icoComplete ='';
+                var icoError = '';
+            	
+                icoComplete = '<svg class="slds-button__icon" aria-hidden="true">';
+            	icoComplete += '<use xlink:href=\'{!URLFOR($Asset.SLDS, "/assets/icons/utility-sprite/svg/symbols.svg#success")}\'></use>';
+            	icoComplete += '</svg>';
+
+            	icoError = '<svg class="slds-button__icon" aria-hidden="true">';
+            	icoError += '<use xlink:href=\'{!URLFOR($Asset.SLDS, "/assets/icons/utility-sprite/svg/symbols.svg#warning")}\'></use>';
+            	icoError += '</svg>';
+
+                var parentWidth = $upload.find('.slds-progress').width();
+                $upload.find(".slds-progress-bar").css('width',parentWidth);
+
+                var pathPrefix = '{!imagePrefix}/' + parentId + '/' + (new Date).getTime() + '_';
+            	var currentFileName = encodeURIComponent(currentFile.name).replace(/%20/g,'+');
+                var key = pathPrefix + currentFile.name;
+                //var params = {Bucket: 'bucket', Key: key, Body: currentFile};
+                var params = {Key: key, ContentType: currentFile.type, Body: currentFile};
+                var request = bucket.upload(params, function (err, data) {
+                        
+                    if(err){
+                        //alert('ERROR'+err);
+                        //If script is here something broke on the JavasSript remoting call
+                        //Add classes to reflect error
+                        $upload.attr('data-status','errored');
+                        $upload.find('#start').removeClass('slds-is-active').addClass('slds-is-completed');
+                        $upload.find('#start button').addClass('slds-button--icon slds-progress__marker--icon').prepend(icoComplete); 
+                        $upload.find('#end').addClass('slds-is-active').addClass('slds-has-error');
+                        $upload.find('#end button').addClass('slds-button--icon slds-progress__marker--icon').prepend(icoError); 
+                        $upload.find('#end button').attr('title',err.message);                      
+                        $upload.find(".slds-progress-bar").attr('title',err.message);
+                        $upload.find(".percentComplete").text('Error');
+                        //$upload.find(".slds-progress-bar__value").css('background-color','red');
+                        //Check and continue the next file to upload
+                        checkForUploads();
+                    }else{
+                        console.log('UPLOADED: '+data);
+                        $upload.find('#start').removeClass('slds-is-active').addClass('slds-is-completed');
+                        $upload.find('#start button').addClass('slds-button--icon slds-progress__marker--icon').prepend(icoComplete); 
+                        $upload.find('#end').addClass('slds-is-active').addClass('slds-is-completed');
+                        $upload.find('#end button').addClass('slds-button--icon slds-progress__marker--icon').prepend(icoComplete);
+
+                        //alert('UPLOADED: '+data); //TO-DO: Sustituir por mensajes bonitos
+                        createImg('https://s3-{!region}.amazonaws.com/{!bucket}/'+pathPrefix+currentFileName, isImage, currentFile.name);
+                        //This file has completed, all byte chunks have been uploaded, set status on the div to complete
+                        $upload.attr('data-status','complete');
+
+                        //Ocultamos la barra y refrescamos la lista
+                        $upload.hide();                     
+
+                        //Call the checkForUploads to find the next upload div that has data-status="pending" and start the upload process.
+                        checkForUploads();
+                    }
+                }).on('httpUploadProgress',function(progress) {
+                    var percentComplete = Math.round(progress.loaded * 100 / progress.total);
+                    $upload.find(".percentComplete").text(percentComplete + '%');
+                    $upload.find(".slds-progress-bar__value").css('width',percentComplete + '%');
+                });
+
+                
+            } else {
+                //alert('Eh?');
+            }
+
+        }
+    </script>
+
+    <apex:form styleClass="slds-form--horizontal">
+        <apex:actionFunction name="createImg" reRender="messagesPanel" action="{!createImg}" oncomplete="overridePageMessages()">
+            <apex:param assignTo="{!urlImg}" name="url" value=""/>
+            <apex:param assignTo="{!isImage}" name="isImage" value=""/>
+            <apex:param assignTo="{!currentFileName}" name="currentFileName" value=""/>
+        </apex:actionFunction>
+		<div class="uploadBox slds-form-element">
+            <div class="slds-file-selector slds-file-selector--images">
+              <apex:outputPanel layout="block" styleClass="slds-file-selector__dropzone" style="height:100px;" id="dropzone">
+                <input type="file" class="slds-file-selector__input slds-assistive-text" multiple="true" id="filesInput" name="file" aria-describedby="file-selector-id" /> <!--accept="image/*" -->
+                <label class="slds-file-selector__body" for="filesInput">
+                  <span class="slds-file-selector__button slds-button slds-button--neutral">
+                    <svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+                      <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#upload')}"></use>
+                    </svg>Search file</span>
+                  <span class="slds-file-selector__text slds-medium-show">drag and drop files</span>
+                </label>
+
+                
+              </apex:outputPanel>
+            </div>
+          </div>
+          <!-- Messages -->
+            <apex:outputPanel layout="block" id="messagesPanel">
+                <apex:pageMessages escape="false"/>
+            </apex:outputPanel>
+            <!-- / Messages -->
+        
+    </apex:form>
+    </html>
+</apex:component>

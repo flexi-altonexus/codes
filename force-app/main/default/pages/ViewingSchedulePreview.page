@@ -1,0 +1,24 @@
+<apex:page controller="ViewingSchedulePreviewController" lightningStylesheets="true" showHeader="true" sidebar="true">
+	<apex:slds />
+	<apex:pageMessages />
+ 	<table style="width: 100%;" >
+		<tbody>
+			<tr><td heihgt="20px">&nbsp;</td><td></td></tr>
+			<tr><td></td><td heihgt="20px">
+				<!-- <button class="slds-button slds-button_neutral">Back</button> -->
+				<!-- <button class="slds-button slds-button_brand">Send Email</button> -->
+				<apex:outputPanel rendered="{!sendEmailShow}">
+					<apex:form >	
+							<apex:commandButton styleClass="slds-vf-button_brand" action="{!sendEmail}" value="Send Email" id="send"/>
+					</apex:form>
+				</apex:outputPanel>
+
+			</td></tr>
+			<tr><td heihgt="20px">&nbsp;</td><td></td></tr>
+			<tr>
+			<td width="100px">&nbsp;</td>
+			<td><c:ViewingScheduleComponent VSId="{!viewingScheduleId}"/></td>
+			</tr>
+		</tbody>
+	</table>
+</apex:page>

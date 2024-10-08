@@ -1,0 +1,576 @@
+<aura:component
+    controller="AgentCreateViewingsUtil"
+    implements="force:appHostable,lightning:availableForFlowActions,flexipage:availableForAllPageTypes,force:lightningQuickAction,flexipage:availableForRecordHome,force:hasRecordId"
+    access="global"
+>
+    <!-- Drag and drop datatable-->
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'"
+    />
+    <ltng:require
+        styles="{!$Resource.JQueryDatatable + '/datatables.min.css'}"
+        scripts="{!$Resource.JQueryDatatable + '/datatables.min.js'}"
+        afterScriptsLoaded="{!c.scriptsLoaded}"
+    />
+
+    <!-- Records Selected on VF -->
+    <aura:attribute name="introListJSON" type="String" />
+    <aura:attribute name="BCList" type="List" />
+
+    <!-- Show Order Table -->
+    <aura:attribute name="showOrder" type="boolean" default="false" />
+    <aura:attribute name="hasViewingSchedule" type="boolean" default="false" />
+    <aura:attribute name="hasFlow" type="boolean" default="true"/>
+
+    <!-- ATTRIBUTES DATATABLE-->
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="data" type="Object" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="errors" type="Object" default="[]" />
+    <aura:attribute name="draftValues" type="Object" default="[]" />
+    <aura:attribute name="rowsSelected" type="List" />
+    <aura:attribute name="sortedBy" type="String" default="order" />
+    <aura:attribute name="sortedDirection" type="String" />
+    <aura:attribute name="BCName" type="String" />
+    <aura:attribute name="clientId" type="String" />
+    <aura:attribute name="oppId" type="String" />
+    <aura:attribute name="leadId" type="String" />
+    <!-- <aura:attribute name="contactRecordId" type="String" /> -->
+    <aura:attribute name="viewingScheduleId" type="String" />
+    <aura:attribute name="emailText" type="String" />
+
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <aura:attribute name="isModalOpen" type="boolean" default="false" />
+    <aura:attribute name="isModalTimeOpen" type="boolean" default="false" />
+    <aura:attribute name="isModalNotesOpen" type="boolean" default="false" />
+    <aura:attribute name="OrderJSON" type="String" />
+    <aura:attribute name="selectTime" type="String" />
+    <aura:attribute name="selectNotes" type="String" />
+    <aura:attribute name="rowupdated" type="String" />
+    <aura:attribute name="PageMessage" type="String" default="" />
+
+    <aura:dependency resource="markup://force:navigateToURL" type="EVENT" />
+
+    <aura:attribute name="changeContactTo" type="String" />
+    <aura:attribute name="selectedContactId" type="String" />
+    <!-- <aura:attribute name="selectedViewingId" type="String" /> -->
+    <aura:attribute name="FilterContact" type="String" />
+    <aura:attribute name="AccountId" type="String" />
+    <aura:attribute name="today" type="Date" default="2017-09-07" />
+
+    <aura:attribute name="formErrors" type="String" />
+
+    <!--STYLE-->
+    <aura:html tag="style">
+        .slds-modal__container{ height : 100%; width: 100%; max-width: 100%; max-height: 100%; }
+    </aura:html>
+
+    <!-- spinner -->
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+
+    <!-- HANDLER-->
+    <aura:handler name="init" value="{! this }" action="{! c.init }" />
+    <!-- <aura:handler event="force:refreshView" action="{!c.isRefreshed}" /> -->
+
+    <!-- TABLE -->
+    <!-- the container element determine the height of the datatable -->
+    <aura:if isTrue="{!v.showSpinner}">
+        <lightning:spinner />
+    </aura:if>
+    <aura:renderIf isTrue="{!v.PageMessage != ''}">
+        <ui:message title="Confirmation" severity="confirm" closable="true">
+            {!v.PageMessage}
+        </ui:message>
+    </aura:renderIf>
+    <aura:renderIf isTrue="{!!v.showOrder}">
+        <lightning:card title="Viewing Schedule details">
+            <div style="float: top">
+                <button type="button" class="slds-button slds-button_brand" onclick="{!c.return}">
+                    Back
+                </button>
+                <button
+                    type="button"
+                    class="slds-button slds-button_neutral"
+                    onclick="{!c.removeDTItems}"
+                >
+                    Remove
+                </button>
+                <button
+                    type="button"
+                    class="slds-button slds-button_neutral"
+                    onclick="{!c.goOrderView}"
+                >
+                    Order
+                </button>
+                <button
+                    type="button"
+                    class="slds-button slds-button_success"
+                    onclick="{!c.viewOnMap}"
+                >
+                    View on map
+                </button>
+                <button
+                    type="button"
+                    class="slds-button slds-button_brand"
+                    onclick="{!c.saveViewingSchedule}"
+                >
+                    Save Viewing Schedule
+                </button>
+                <aura:renderIf isTrue="{!v.hasViewingSchedule}">
+                    <button
+                        type="button"
+                        class="slds-button slds-button_success"
+                        onclick="{!c.previewEmail}"
+                    >
+                        Preview Email
+                    </button>
+                    <button
+                        type="button"
+                        class="slds-button slds-button_brand"
+                        onclick="{!c.handleSendEmail}"
+                    >
+                        Send Email
+                    </button>
+                    <button
+                            type="button"
+                            class="slds-button slds-button_brand"
+                            onclick="{!c.confirmAttendance}"
+                            >
+                        Confirm Attendance
+                    </button>
+                <aura:renderIf isTrue="{!v.hasFlow}">
+                 <lightning:flow aura:id="flowData" onstatuschange="{!c.statusChange}"  />
+                </aura:renderIf>
+                </aura:renderIf>
+
+            </div>
+            <br />
+            <div>
+                <lightning:input
+                    style="width: 150px"
+                    aura:id="vdate"
+                    type="date"
+                    label="Schedule day"
+                    name="vdate"
+                    value="{!v.today}"
+                />
+                <lightning:textarea
+                    name="inputComments"
+                    label="Add comments to the Client email:"
+                    value="{! v.emailText }"
+                />
+            </div>
+            <div style="height: 325px">
+                <lightning:datatable
+                    aura:id="dataTable"
+                    columns="{! v.columns }"
+                    data="{! v.data }"
+                    keyField="Id"
+                    sortedBy="{! v.sortedBy }"
+                    sortedDirection="{! v.sortedDirection }"
+                    defaultSortDirection="{! v.defaultSortDirection }"
+                    errors="{! v.errors }"
+                    onrowselection="{!c.updateDTSelectedRows }"
+                    onrowaction="{! c.handleRowAction }"
+                    onsave="{! c.handleSaveEdition }"
+                    onsort="{! c.updateColumnSorting }"
+                    showRowNumberColumn="false"
+                    rowNumberOffset="3"
+                    resizeColumnDisabled="true"
+                />
+            </div>
+        </lightning:card>
+    </aura:renderIf>
+    <aura:renderIf isTrue="{!v.showOrder}">
+        <div class="slds-m-around_medium">
+            <div style="float: top">
+                <button type="button" class="slds-button slds-button_neutral" onclick="{!c.goback}">
+                    Return
+                </button>
+                <button
+                    type="button"
+                    class="slds-button slds-button_neutral"
+                    onclick="{!c.updateorder}"
+                >
+                    Update order
+                </button>
+                <button
+                    type="button"
+                    class="slds-button slds-button_neutral"
+                    onclick="{!c.updateTime}"
+                >
+                    Update Time Interval
+                </button>
+            </div>
+
+            <div style="float: left">
+                <lightning:input
+                    style="width: 150px"
+                    aura:id="vstartime"
+                    type="time"
+                    label="Start time"
+                    value="08:00"
+                    name="starttime"
+                />
+            </div>
+            <div style="float: left">
+                <lightning:select
+                    aura:id="vinterval"
+                    class="select-input"
+                    name="interval"
+                    label="Interval"
+                    required="true"
+                >
+                    <option value="">choose one...</option>
+                    <option value="15" selected="true">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                    <option value="60">60</option>
+                    <option value="90">90</option>
+                    <option value="120">120</option>
+                </lightning:select>
+            </div>
+            <br />
+            <table
+                id="tableId"
+                class="slds-table slds-table_cell-buffer slds-table_bordered"
+                cellspacing="0"
+                width="100%"
+            >
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Order">Order</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Order">Id</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Centre Name">Centre Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Centre Manager">Centre Manager</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Centre Manager">Time</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Notes">Notes</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.data}" var="view">
+                        <tr class="slds-hint-parent">
+                            <td>{!view.order}</td>
+                            <td>{!view.bcId}</td>
+                            <td>{!view.bcName}</td>
+                            <td>{!view.manager}</td>
+                            <td>{!view.stime}</td>
+                            <td>{!view.abrNotes}</td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+    </aura:renderIf>
+    <aura:if isTrue="{!v.isModalOpen}">
+        <!-- Modal/Popup Box starts here-->
+
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open slds-modal_medium"
+        >
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box Header Starts here-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon
+                        iconName="utility:close"
+                        onclick="{! c.closeModel }"
+                        alternativeText="close"
+                        variant="bare-inverse"
+                        class="slds-modal__close"
+                    />
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Update Manager Information
+                    </h2>
+                </header>
+                <!--<lightning:messages />-->
+                <aura:if isTrue="{!v.formErrors}">
+                    <ui:message title="Error" severity="error" closable="true">
+                        {!v.formErrors}
+                    </ui:message>
+                </aura:if>
+                <!--Modal/Popup Box Body Starts here-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:tabset selectedTabId="one">
+                        <lightning:tab label="Search Contact" id="one">
+                            <p>
+                                <b>Select an existing contact as Secondary Contact</b>
+                            </p>
+                            <div class="slds-form-element slds-size_1-of-1">
+                                <!-- queryCondition="{!v.FilterContact}"  -->
+                                <l_lookup:Lookup
+                                    aura:id="uniqueLookupId"
+                                    objectType="Contact"
+                                    additionalField="Email"
+                                    setTo="{!v.changeContactTo}"
+                                    selectedRecordId="{!v.selectedContactId}"
+                                />
+                            </div>
+                            <br />
+                            <lightning:button
+                                variant="brand"
+                                label="Save selected contact"
+                                title="Save selected contact"
+                                onclick="{!c.updateManagerSelected}"
+                            />
+                        </lightning:tab>
+                        <!--
+                        <aura:if isTrue="{!v.contactRecordId != null}">
+                            
+                         <lightning:tab label="Update Contact" id="two">
+                           <p><b>Update Manager information</b></p>
+                                  
+                                  <lightning:recordEditForm aura:id="contactForm" recordId="{!v.contactRecordId}" onsuccess="{!c.handleSuccess}" onerror="{!c.handleError}" objectApiName="Contact">
+                                    <div aura:id="contactnewCreation">
+                                       
+                                        <div style="display:none">
+                                                <lightning:inputField fieldName="Name"/>
+                                        </div>
+
+                                        
+                                        <div class="slds-form-element__row">
+                                            <div class="slds-form-element slds-size_1-of-2">
+                                                <lightning:inputField fieldName="Salutation"/>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="slds-form-element__row">
+                                            <div class="slds-form-element slds-size_1-of-2">
+                                                <lightning:inputField fieldName="FirstName"/>
+                                            </div>
+                                            <div class="slds-form-element slds-size_1-of-2">
+                                                <lightning:inputField fieldName="LastName" />
+                                            </div>
+                                        </div>
+
+                                       
+                                        <div class="slds-form-element__row">
+                                            <div class="slds-form-element slds-size_1-of-2">
+                                                <lightning:inputField fieldName="Email" />
+                                            </div>
+                                             <div class="slds-form-element slds-size_1-of-2">
+                                                <lightning:inputField fieldName="Phone" />
+                                            </div>
+                                        </div>  
+                                        
+                                        <lightning:inputField fieldName="AccountId" value="{!v.AccountId}" class="slds-hidden"/>
+
+                                    </div>
+
+                            </lightning:recordEditForm>
+                            <lightning:button variant="brand"
+                                          label="Save"
+                                          title="Save"
+                                          onclick="{!c.updateManagerDetails}"/>
+                        </lightning:tab>
+                      </aura:if>
+                    -->
+                        <lightning:tab label="Create Contact" id="three">
+                            <p><b>Create a new contact as Manager</b></p>
+
+                            <lightning:recordEditForm
+                                aura:id="contactFormNew"
+                                onsuccess="{!c.handleSuccess}"
+                                onerror="{!c.handleError}"
+                                objectApiName="Contact"
+                            >
+                                <div aura:id="contactnewCreation">
+                                    <div style="display: none">
+                                        <lightning:inputField fieldName="Name" />
+                                    </div>
+
+                                    <!-- 1 row -->
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <lightning:inputField fieldName="Salutation" />
+                                        </div>
+                                    </div>
+                                    <!-- 2 row -->
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <lightning:inputField fieldName="FirstName" />
+                                        </div>
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <lightning:inputField fieldName="LastName" />
+                                        </div>
+                                    </div>
+
+                                    <!-- 3 row -->
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <lightning:inputField fieldName="Email" />
+                                        </div>
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <lightning:inputField fieldName="Phone" />
+                                        </div>
+                                    </div>
+
+                                    <lightning:inputField
+                                        fieldName="AccountId"
+                                        value="{!v.AccountId}"
+                                        class="slds-hidden"
+                                    />
+                                </div>
+                            </lightning:recordEditForm>
+                            <lightning:button
+                                variant="brand"
+                                label="Save new contact"
+                                title="Save new contact"
+                                onclick="{!c.saveNewManager}"
+                            />
+                        </lightning:tab>
+                    </lightning:tabset>
+                </div>
+                <!--Modal/Popup Box Footer Starts here-->
+                <footer class="slds-modal__footer">
+                    <lightning:button
+                        variant="neutral"
+                        label="Cancel"
+                        title="Cancel"
+                        onclick="{! c.closeModel }"
+                    />
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <aura:if isTrue="{!v.isModalTimeOpen}">
+        <!-- Modal/Popup Box starts here-->
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open slds-modal_small"
+        >
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box Header Starts here-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon
+                        iconName="utility:close"
+                        onclick="{! c.closeModel }"
+                        alternativeText="close"
+                        variant="bare-inverse"
+                        class="slds-modal__close"
+                    />
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Update Time Information ({!v.BCName})
+                    </h2>
+                </header>
+                <!--<lightning:messages />-->
+                <aura:if isTrue="{!v.formErrors}">
+                    <ui:message title="Error" severity="error" closable="true">
+                        {!v.formErrors}
+                    </ui:message>
+                </aura:if>
+                <!--Modal/Popup Box Body Starts here-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:input
+                        style="width: 150px"
+                        type="time"
+                        name="input1"
+                        value="{!v.selectTime}"
+                        label="Enter a time"
+                    />
+                    <br /><br /><br /><br /><br />
+                </div>
+                <!--Modal/Popup Box Footer Starts here-->
+                <footer class="slds-modal__footer slds-modal__footer_directional">
+                    <lightning:button
+                        variant="brand"
+                        label="Save"
+                        title="Save"
+                        onclick="{! c.saveTime }"
+                    />
+                    <lightning:button
+                        variant="neutral"
+                        label="Cancel"
+                        title="Cancel"
+                        onclick="{! c.closeModel }"
+                    />
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <aura:if isTrue="{!v.isModalNotesOpen}">
+        <!-- Modal/Popup Box starts here-->
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-labelledby="modal-heading-01"
+            aria-modal="true"
+            aria-describedby="modal-content-id-1"
+            class="slds-modal slds-fade-in-open slds-modal_small"
+        >
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box Header Starts here-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon
+                        iconName="utility:close"
+                        onclick="{! c.closeModel }"
+                        alternativeText="close"
+                        variant="bare-inverse"
+                        class="slds-modal__close"
+                    />
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Update Notes for ({!v.BCName})
+                    </h2>
+                </header>
+                <!--<lightning:messages />-->
+                <aura:if isTrue="{!v.formErrors}">
+                    <ui:message title="Error" severity="error" closable="true">
+                        {!v.formErrors}
+                    </ui:message>
+                </aura:if>
+                <!--Modal/Popup Box Body Starts here-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:input
+                        style="width: 600px"
+                        type="text"
+                        name="inputNotes"
+                        value="{!v.selectNotes}"
+                        label="Notes"
+                    />
+                    <br /><br /><br /><br /><br />
+                </div>
+                <!--Modal/Popup Box Footer Starts here-->
+                <footer class="slds-modal__footer slds-modal__footer_directional">
+                    <lightning:button
+                        variant="brand"
+                        label="Save"
+                        title="Save"
+                        onclick="{! c.saveNotes }"
+                    />
+                    <lightning:button
+                        variant="neutral"
+                        label="Cancel"
+                        title="Cancel"
+                        onclick="{! c.closeModel }"
+                    />
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

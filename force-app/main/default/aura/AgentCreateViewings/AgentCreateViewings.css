@@ -1,0 +1,7 @@
+.THIS .select-input{
+    width: 100px;
+}
+.THIS .slds-table .slds-row-number:after {
+    content: counter(none) !important ;
+    display: none !important ;
+}

@@ -1,0 +1,157 @@
+<template>
+    <div class="table-cell name-cell" data-expandable={expandable}>
+        <lightning-layout onclick={expandRow} data-expandable={isExpandable}>
+            <lightning-layout-item
+                if:true={expandable}
+                class="slds-p-right_xx-small"
+                style="vertical-align: middle"
+            >
+                <lightning-icon
+                    icon-name={expandIcon}
+                    size="x-small"
+                ></lightning-icon>
+            </lightning-layout-item>
+            <lightning-layout-item>
+                <lightning-formatted-text
+                    value={rowName}
+                ></lightning-formatted-text>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={monthlyTarget}
+            format-style="currency"
+            currency-code={currency}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={closedLastWeek}
+            format-style="currency"
+            currency-code={currency}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={closedThisWeek}
+            format-style="currency"
+            currency-code={currency}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={closedThisMonth}
+            format-style="currency"
+            currency-code={currency}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={expectedThisMonth}
+            format-style="currency"
+            currency-code={currency}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={predictedTotalThisMonth}
+            format-style="currency"
+            currency-code={currency}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={totalForecastForMonth}
+            format-style="currency"
+            currency-code={currency}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={expectedTotalNextMonth}
+            format-style="currency"
+            currency-code={currency}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={totalLeads}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={totalOpps}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={arrangeViewings}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={completedViewings}
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number value={deals}></lightning-formatted-number>
+    </div>
+
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={leadsToOpportunities}
+            format-style="percent"
+            maximum-fraction-digits="1"
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={leadsArrangeViewingPercentage}
+            format-style="percent"
+            maximum-fraction-digits="1"
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={leadsCompletedViewingsPercentage}
+            format-style="percent"
+            maximum-fraction-digits="1"
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={oppsToCompletedViewings}
+            format-style="percent"
+            maximum-fraction-digits="1"
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={arrangedCompletedViewingsPercentage}
+            format-style="percent"
+            maximum-fraction-digits="1"
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={completedViewingsDealsPercentage}
+            format-style="percent"
+            maximum-fraction-digits="1"
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={oppsToDeals}
+            format-style="percent"
+            maximum-fraction-digits="1"
+        ></lightning-formatted-number>
+    </div>
+    <div class="table-cell">
+        <lightning-formatted-number
+            value={leadsDealsPercentage}
+            format-style="percent"
+            maximum-fraction-digits="1"
+        ></lightning-formatted-number>
+    </div>
+</template>

@@ -1,0 +1,35 @@
+<aura:component controller="DataDwellIntroductionOverviewController">
+    <aura:attribute name="intro" type="Object" />
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="loadCount" type="Integer" default="0" />
+    <tr class="slds-hint-parent">
+        <th data-label="Business Centre Name" scope="row">
+            <div class="slds-truncate" title="{!v.intro.businessCenterName}">
+                {!v.intro.businessCenterName}
+            </div>
+        </th>
+        <!--<td data-label="Shortlisted">
+            <lightning:icon iconName="{!v.intro.hasOptions?'utility:check':'utility:close'}" alternativeText="Shortlisted" title="Shortlisted" />
+        </td>-->
+        <td data-label="Has Options">
+            <div class="slds-float_right">
+            	<lightning:icon class="{!v.intro.hasOptions?'dd-true':'dd-false'}" size="xx-small" iconName="{!v.intro.hasOptions?'utility:check':'utility:close'}" alternativeText="Has Options" title="Has Options" />
+            </div>
+        </td>
+        <td data-label="In Portal">
+            <div class="slds-float_right">
+                <aura:if isTrue="{!v.intro.shared > 0}">
+                    <lightning:buttonIcon class="dd-true" iconName="utility:check" variant="bare" onclick="{! c.clickRemovePortal }" alternativeText="Remove from Portal" title="Remove from Portal" />
+                    <aura:set attribute="else">
+                        <lightning:buttonIcon class="dd-false" iconName="utility:close" variant="bare" onclick="{! c.clickAddPortal }" alternativeText="Add to Portal" title="Add to Portal" />
+                    </aura:set>
+                </aura:if>
+            </div>
+        </td>
+        <td data-label="Opened">
+            <div class="slds-float_right">
+            	{!v.intro.opened}
+            </div>
+        </td>
+    </tr>
+</aura:component>

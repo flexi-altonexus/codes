@@ -1,0 +1,141 @@
+<apex:page standardStylesheets="false" sidebar="false" applyBodyTag="false" docType="html-5.0" standardController="Account" extensions="AWS_FileUploadController">
+
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<apex:slds />
+		<style>
+			.msgIcon {
+			    display: none!important
+			}
+			.customMessage * {
+			    color: #fff!important
+			}
+			.customMessage {
+			    margin: 5px 0!important;
+			    /*max-width: 1280px;*/
+			    opacity: 1!important;
+			    width: 100%;
+			    font-size: 12px;
+			    border: 0px;
+			    padding-left: 10px;
+			}
+			.message {
+			    opacity: .1
+			}
+
+			.fixed {
+			    display: block;
+			    position: fixed;
+			    top: 0;
+			    z-index: 999;
+			    background-color: #c2c3c3;
+			    padding: 10px;
+			}
+
+		</style>
+		<script>
+			var j$ = jQuery.noConflict();
+
+	        j$(document).on('change', '#select-all', function(){
+			    var checkboxes = j$(this).closest('form').find("[id$='marked'][type=checkbox]");
+
+			    if(j$(this).is(':checked')) {
+			        checkboxes.prop('checked', true);
+			    } else {
+			        checkboxes.prop('checked', false);
+			    }
+			});
+
+			j$(document).on('change', 'input[id$="main"][type=checkbox]', function() {
+			    j$('input[id$="main"][type=checkbox]').not(this).prop('checked', false);  
+			});
+
+
+			j$(window).scroll(function() {
+			    var distanceFromTop = j$(this).scrollTop();
+			    var topTable = j$('div[id$="general"]').offset();
+			    var mainWidth = j$('#mainContainer').width();
+			    
+			    if (distanceFromTop >= topTable.top) {
+			        j$('div[id$="buttonBar"]').addClass('fixed');
+			        j$('div[id$="buttonBar"]').css('width',mainWidth);
+			    } else {
+			        j$('div[id$="buttonBar"]').removeClass('fixed');
+			        j$('div[id$="buttonBar"]').css('width','');
+			    }
+			});
+		        
+		    function overridePageMessages(){    
+		        j$('.warningM3').addClass('slds-notify slds-notify--toast slds-theme--warning customMessage slds-theme--alert-texture');        
+		        j$('.confirmM3').addClass('slds-notify slds-notify--toast slds-theme--success customMessage slds-theme--alert-texture');  
+		        j$('.errorM3').addClass('slds-notify slds-notify--toast slds-theme--error customMessage slds-theme--alert-texture');               
+		        j$('.infoM3').addClass('slds-notify slds-notify--toast customMessage slds-theme--alert-texture'); 
+		                         
+		        j$('.errorM3').removeClass('errorM3'); 
+		        j$('.confirmM3').removeClass('confirmM3'); 
+		        j$('.infoM3').removeClass('infoM3');   
+		        j$('.warningM3').removeClass('warningM3');  
+
+		        var scrollPos =  j$('div[id$="messagesPanel"]').offset().top;
+ 				j$(window).scrollTop(scrollPos);
+
+		        j$('div .slds-notify--toast').delay(5000).hide("slow");
+
+		    }
+
+		    /*function isSF1(){
+			    if((typeof sforce != 'undefined') && sforce && (!!sforce.one)) {
+			        //sforce.one.back(true);
+			        sforce.one.navigateToSObject({!parentId});
+			    } else {
+			        // Set the window's URL using a Visualforce expression
+			        //window.history.back();
+			        window.location.href = '{!$Site.BaseURL}/{!parentId}';
+			    }
+
+			}*/
+		</script>
+    </head>
+
+	<body>
+    	<div id="mainContainer" class="slds-scope">
+
+    		<!-- MASTHEAD -->
+			<p class="slds-text-heading--label slds-m-bottom--small">
+				<!-- {!parentName} > {!obj} --> drag and drop files
+			</p>
+			<!-- / MASTHEAD -->
+
+			<!-- Upload form --> 
+            <div class="slds-container--fluid">
+           		<c:AWS_FileUploadComponent parentId="{!parentId}"/>
+            </div>
+            <!-- / Upload form --> 
+
+			
+
+            <!-- Buttons -->
+			<!-- <apex:outputPanel layout="block" id="buttonBar" styleClass="slds-m-vertical--small slds-text-align--center">
+				
+				<apex:outputText >
+					<a class="slds-button slds-button--brand" href="{!$Site.BaseURL}/apex/AWS_RelatedFiles?id={!Account.Id}">
+						<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+							<use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#image')}"></use>
+						</svg>Ir a Gestión de imágenes
+					</a>
+				</apex:outputText>
+				<a class="slds-button slds-button--brand" href="{!$Site.BaseURL}/{!Account.Id}">
+					<svg class="slds-button__icon slds-button__icon--left" aria-hidden="true">
+						<use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/utility-sprite/svg/symbols.svg#home')}"></use>
+					</svg>Volver al registro
+				</a>
+			</apex:outputPanel> -->
+            <!-- / Buttons -->
+			
+    	</div>
+    </body>
+</html>
+</apex:page>

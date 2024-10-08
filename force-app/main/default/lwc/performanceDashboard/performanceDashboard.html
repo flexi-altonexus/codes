@@ -1,0 +1,40 @@
+<template>
+    <c-page-header
+        title="Agent Performance"
+        icon="standard:opportunity"
+        class="slds-p-bottom_medium"
+    >
+        <div slot="subHeader">
+            <lightning-layout>
+                <lightning-input
+                    type="date"
+                    value={dashboardDate}
+                    label="Dashboard Date"
+                    disabled={loading}
+                    field-level-help="The date in the month to run the report to. Records created / closing after this date wont be taken into account (except for Expected/Predicted revenue)"
+                    onchange={updateData}
+                ></lightning-input>
+            </lightning-layout>
+        </div>
+        <div slot="actions">
+            <lightning-button
+                label="Export as CSV"
+                variant="brand"
+                onclick={exportAsCSV}
+                disabled={loading}
+            ></lightning-button>
+        </div>
+    </c-page-header>
+
+    <div class="slds-is-relative slds-card" style="margin-bottom: 3rem;">
+        <lightning-spinner
+            if:true={loading}
+            alternative-text="Loading Dashboard..."
+            variant="brand"
+        ></lightning-spinner>
+
+        <c-performance-dashboard-table tiers={dashboardData}></c-performance-dashboard-table>
+    </div>
+
+    <a data-download-link></a>
+</template>

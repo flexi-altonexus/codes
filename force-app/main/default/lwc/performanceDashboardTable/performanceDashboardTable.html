@@ -1,0 +1,40 @@
+<template>
+    <div class="slds-scrollable" style="max-width:100%; max-height:85%">
+        <div class="table slds-table">
+            <div class="table-header-row ">
+                <template for:each={headers} for:item="header">
+                    <div key={header} class="table-header-cell slds-text-align_center">
+                        <lightning-formatted-text value={header}></lightning-formatted-text>
+                    </div>
+                </template>
+            </div>
+
+            <!--Overall View-->
+            <c-performance-dashboard-row
+                row-name="Total"
+                monthly-target={monthlyTarget}
+                closed-last-week={closedLastWeek}
+                closed-this-week={closedThisWeek}
+                closed-this-month={closedThisMonth}
+                expected-this-month={expectedThisMonth}
+                predicted-total-this-month={predictedTotalThisMonth}
+                expected-total-next-month={expectedTotalNextMonth}
+                total-leads={totalLeads}
+                total-opps={totalOpps}
+                arrange-viewings={arrangeViewings}
+                completed-viewings={completedViewings}
+                deals={deals}
+                data-visible={expanded}
+                title="Total"
+            ></c-performance-dashboard-row>
+
+            <template for:each={tiers} for:item="tier">
+                <c-performance-dashboard-tier-group
+                    key={tier.name}
+                    tier-name={tier.name}
+                    tier-members={tier.members}
+                ></c-performance-dashboard-tier-group>
+            </template>
+        </div>
+    </div>
+</template>
